@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 11d3e20eccc19804793ae87e17bbc8ea, type: 3}
+  m_Name: WeaponsMeta
+  m_EditorClassIdentifier: 
+  weaponMetas:
+  - weaponType: 0
+    shellDistance: 3.5
+    impactDamage: 10
+    launchSpeed: 10
+    shellLinearDrag: 0
+    shellGravityScale: 0.5
+    periodicDamage: 0
+    damageInterval: 0
+    fireDuration: 0
+    skipTurnsCount: 0
+  - weaponType: 1
+    shellDistance: 3.5
+    impactDamage: 5
+    launchSpeed: 10
+    shellLinearDrag: 0
+    shellGravityScale: 0.5
+    periodicDamage: 3
+    damageInterval: 0.25
+    fireDuration: 5
+    skipTurnsCount: 0
+  - weaponType: 2
+    shellDistance: 3.5
+    impactDamage: 25
+    launchSpeed: 10
+    shellLinearDrag: 0
+    shellGravityScale: 0.5
+    periodicDamage: 0
+    damageInterval: 0
+    fireDuration: 0
+    skipTurnsCount: 2
