@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using GoogleMobileAds.Api;
 
 public class Director : MonoBehaviour
 {
@@ -23,7 +24,9 @@ public class Director : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+
             DontDestroyOnLoad(this);
+            //MobileAds.Initialize(initst);
         }
         else Destroy(gameObject);
     }

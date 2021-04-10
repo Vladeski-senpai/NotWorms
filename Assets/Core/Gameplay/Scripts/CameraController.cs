@@ -4,17 +4,21 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [Header("Settings")]
+    [SerializeField] float cameraAimTime;
     [SerializeField] float yOffset;
     [SerializeField] ShakeSettings[] shakeSettings;
 
     [Header("References")]
-    [SerializeField] Transform player;
     [SerializeField] Transform shakeContainer;
 
     public static CameraController Instance;
 
+    Coroutine cameraAimCO;
     Coroutine shakeCO;
+    Transform target;
     Vector3 newPosition;
+    bool isActive;
+    bool canMove;
 
     void Awake()
     {
@@ -23,9 +27,35 @@ public class CameraController : MonoBehaviour
 
     void LateUpdate()
     {
-        newPosition = player.position;
+        FollowTarget();
+    }
+
+    // Преследуем цель
+    void FollowTarget()
+    {
+        if (!isActive) return;
+
+        newPosition = target.position;
         newPosition.y += yOffset;
-        transform.position = newPosition;
+
+        if (canMove) transform.position = newPosition;
+    }
+
+    // Меняем цель преследования
+    public void ChangeTarget(Transform _target)
+    {
+        target = _target;
+
+        if (!isActive) isActive = true;
+
+        if (cameraAimCO != null)
+            StopCoroutine(cameraAimCO);
+
+        // Плавно наводим камеру на цель
+        cameraAimCO = StartCoroutine(AimOnTarget());
+
+        // Не обновляет динамически позицию
+        //transform.DOMove(newPosition, cameraAimTime).OnComplete(() => { canMove = true; });
     }
 
     // Трясём камеру
@@ -58,6 +88,26 @@ public class CameraController : MonoBehaviour
         }
 
         shakeContainer.localPosition = Vector2.zero;
+    }
+
+    // Наводим камеру на цель
+    IEnumerator AimOnTarget()
+    {
+        Vector2 startPosition = transform.position;
+        float elapsedTime = 0;
+
+        canMove = false;
+
+        while (elapsedTime < cameraAimTime)
+        {
+            elapsedTime += Time.deltaTime;
+            transform.position = Vector3.Lerp(startPosition, newPosition, elapsedTime / cameraAimTime);
+
+            yield return null;
+        }
+
+        transform.position = newPosition;
+        canMove = true;
     }
 }
 

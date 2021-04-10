@@ -17,6 +17,7 @@ public class Aim : MonoBehaviour
     [SerializeField] Transform spawnPoint;
     [SerializeField] Transform pointsContainer;
     [SerializeField] GameObject trajectoryPoint;
+    [SerializeField] Transform target;
 
     // Other
     public Transform SpawnPoint => spawnPoint;

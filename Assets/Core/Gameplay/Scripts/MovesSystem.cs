@@ -10,6 +10,7 @@ public class MovesSystem : MonoBehaviour
     [Header("References")]
     [SerializeField] GameManager gameManager;
     [SerializeField] HUDManager hudManager;
+    [SerializeField] CameraController cameraController;
 
     public bool IsPlayerTurn { get; private set; }
 
@@ -51,10 +52,12 @@ public class MovesSystem : MonoBehaviour
                     bot.MoveWasMade = true;
                     botFound = bot.TurnState(true);
 
+                    // Если бот может ходить
                     if (botFound)
                     {
                         botManager = bot;
                         hudManager.UpdateSideTurnText(true);
+                        cameraController.ChangeTarget(bot.transform);
                     }
 
                     break;
@@ -74,6 +77,7 @@ public class MovesSystem : MonoBehaviour
             {
                 hudManager.UpdateSideTurnText(true, true);
                 playerManager.TurnState(true);
+                cameraController.ChangeTarget(playerManager.transform);
             }
 
             StartTimer();
@@ -105,6 +109,7 @@ public class MovesSystem : MonoBehaviour
 
         StopTimer();
         ClearBots();
+        hudManager.UpdateTimer(0);
         hudManager.UpdateSideTurnText(false);
 
         if (!IsPlayerTurn && botManager != null) botManager.TurnState(false);

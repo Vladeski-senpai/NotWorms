@@ -1,6 +1,5 @@
 using DG.Tweening;
 using UnityEngine;
-using UnityEngine.Events;
 
 public class GameOverManager : MonoBehaviour
 {
@@ -17,9 +16,6 @@ public class GameOverManager : MonoBehaviour
     [Header("References")]
     [SerializeField] CanvasGroup menuCG;
     [SerializeField] RectTransform adButtonRT;
-
-    [Header("Events")]
-    [SerializeField] UnityEvent OnAdButtonPressedEvent;
 
     Transitions transitions;
     Coroutine menuCO;
@@ -65,12 +61,5 @@ public class GameOverManager : MonoBehaviour
     public void OnMainMenuButtonPressed()
     {
         ScenesManager.Instance.LoadScene(0);
-    }
-
-    // При нажатии на "Продолжить игру"
-    public void OnAdButtonPressed()
-    {
-        MenuState(false);
-        OnAdButtonPressedEvent.Invoke();
     }
 }
