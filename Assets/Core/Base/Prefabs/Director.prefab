@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSettings:
     nickNameMaxLength: 13
-    roundStartDelay: 3
+    roundStartDelay: 2
     turnSwitchDelay: 2
     startHealth: 0
     moveSpeed: 0

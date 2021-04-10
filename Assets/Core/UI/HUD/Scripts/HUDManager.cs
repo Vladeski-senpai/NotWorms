@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class HUDManager : MonoBehaviour
@@ -7,9 +8,14 @@ public class HUDManager : MonoBehaviour
     [Header("Settings")]
     [SerializeField] float animationTime;
     [SerializeField] float scaleMultiplier;
-    [SerializeField] Color defaultColor;
+    [SerializeField] Color defaultWeaponSlotColor;
+    [SerializeField] Color playerTurnColor;
+    [SerializeField] Color enemyTurnColor;
 
     [Header("References")]
+    [SerializeField] TextMeshProUGUI turnSideTMP;
+    [SerializeField] TextMeshProUGUI turnTMP;
+    [SerializeField] TextMeshProUGUI timerTMP;
     [SerializeField] WeaponSlot[] weaponSlots;
 
     WeaponSlot currentWeapon;
@@ -17,16 +23,32 @@ public class HUDManager : MonoBehaviour
     void Start()
     {
         currentWeapon = weaponSlots[0];
-        weaponSlots[0].Select(true, scaleMultiplier, 0, defaultColor);
+        weaponSlots[0].Select(true, scaleMultiplier, 0, defaultWeaponSlotColor);
     }
 
     // Выбираем оружие
     public void SelectWeapon(int index)
     {
-        currentWeapon.Select(false, scaleMultiplier, animationTime, defaultColor);
+        currentWeapon.Select(false, scaleMultiplier, animationTime, defaultWeaponSlotColor);
 
         currentWeapon = weaponSlots[index];
 
-        currentWeapon.Select(true, scaleMultiplier, animationTime, defaultColor);
+        currentWeapon.Select(true, scaleMultiplier, animationTime, defaultWeaponSlotColor);
+    }
+
+    // Обновляем текст с информацией о ходящей стороне
+    public void UpdateSideTurnText(bool show, bool isPlayerTurn = false)
+    {
+        string side = isPlayerTurn ? "Player's" : "Enemy's";
+
+        turnTMP.text = show ? "turn" : "";
+        turnSideTMP.text = show ? side : "";
+        turnSideTMP.color = isPlayerTurn ? playerTurnColor : enemyTurnColor;
+    }
+
+    // Обновляем время таймера
+    public void UpdateTimer(float time)
+    {
+        timerTMP.text = time.ToString("F0");
     }
 }

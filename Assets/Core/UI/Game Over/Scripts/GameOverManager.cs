@@ -1,20 +1,29 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Events;
 
 public class GameOverManager : MonoBehaviour
 {
     [Header("Settings")]
+    [SerializeField] float adBtnShakeDelay;
+    [SerializeField] float adBtnShakeDuration;
+    [SerializeField] Vector2 adBtnShakeVector;
+    //[SerializeField] float adBtnShakeStrength;
+    [SerializeField] int adBtnShakeVibrato;
+    [SerializeField] float adBtnShakeRandomness;
     [SerializeField] float menuFadeTime;
     [SerializeField] float menuFadeInDelay;
 
     [Header("References")]
     [SerializeField] CanvasGroup menuCG;
+    [SerializeField] RectTransform adButtonRT;
 
     [Header("Events")]
     [SerializeField] UnityEvent OnAdButtonPressedEvent;
 
     Transitions transitions;
     Coroutine menuCO;
+    Tweener adTweener;
     Helper helper;
 
     void Start()
@@ -29,7 +38,19 @@ public class GameOverManager : MonoBehaviour
         menuCG.interactable = show;
         menuCG.blocksRaycasts = show;
 
-        if (show) Cursor.visible = true;
+        if (show)
+        {
+            Cursor.visible = true;
+
+            helper.PerformWithDelay(adBtnShakeDelay, () =>
+            {
+                adTweener = adButtonRT.DOShakeAnchorPos(adBtnShakeDuration, adBtnShakeVector, adBtnShakeVibrato, adBtnShakeRandomness);
+            });
+        }
+        else
+        {
+            adTweener.Complete();
+        }
 
         if (menuCO != null)
             StopCoroutine(menuCO);

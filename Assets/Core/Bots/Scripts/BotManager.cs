@@ -79,6 +79,7 @@ public class BotManager : MonoBehaviour
     // Убиваем бота
     void Die()
     {
+        gameManager.OnMoveEnded();
         gameManager.DeleteBot(this);
         Destroy(gameObject);
     }

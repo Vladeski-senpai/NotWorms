@@ -19,7 +19,6 @@ public class PlayerManager : MonoBehaviour
     [Header("References")]
     [SerializeField] TextMeshProUGUI nicknameTMP;
     [SerializeField] Rigidbody2D rbody;
-    [SerializeField] GameObject healthBar;
     [SerializeField] GameObject crosshair;
     [SerializeField] Transform groundCheck;
     [SerializeField] Image healthSlider;
@@ -60,7 +59,7 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         // TEMP
-        if (Input.GetKeyDown(KeyCode.H)) DoDamage(10);
+        if (Input.GetKeyDown(KeyCode.H)) DoDamage(25);
 
         if (!canMove) return;
 
@@ -169,9 +168,6 @@ public class PlayerManager : MonoBehaviour
     {
         float finalHealth = health - amount;
 
-        if (!healthBar.activeSelf)
-            healthBar.SetActive(true);
-
         if (finalHealth <= 0)
         {
             finalHealth = 0;
@@ -216,7 +212,7 @@ public class PlayerManager : MonoBehaviour
     {
         moveDirection = Vector2.zero;
 
-        gameManager.GameOverManager.MenuState(true);
+        gameManager.GameOver();
         gameObject.SetActive(false);
     }
 

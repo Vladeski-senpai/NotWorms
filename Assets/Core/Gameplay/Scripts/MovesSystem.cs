@@ -9,7 +9,7 @@ public class MovesSystem : MonoBehaviour
 
     [Header("References")]
     [SerializeField] GameManager gameManager;
-    [SerializeField] TextMeshProUGUI timerTMP;
+    [SerializeField] HUDManager hudManager;
 
     public bool IsPlayerTurn { get; private set; }
 
@@ -19,6 +19,7 @@ public class MovesSystem : MonoBehaviour
     Director director;
     Helper helper;
     float currentTime;
+    bool isGameFinished;
 
     void Start()
     {
@@ -27,52 +28,56 @@ public class MovesSystem : MonoBehaviour
         playerManager = gameManager.PlayerManager;
         IsPlayerTurn = true;
 
-        helper.PerformWithDelay(director.GameSettings.RoundStartDelay, () =>
-        {
-            StartMove();
-        });
-    }
-
-    void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.T))
-            StartTimer();
+        hudManager.UpdateSideTurnText(false);
     }
 
     // Начинаем ход
-    void StartMove()
+    public void StartMove(float delay = 0)
     {
-        // Ход ботов
-        if (!IsPlayerTurn)
+        helper.PerformWithDelay(delay, () =>
         {
-            bool botFound = false;
+            if (isGameFinished) return;
 
-            // Ищем бота который может ходить
-            foreach (var bot in gameManager.BotManagers)
+            // Ход ботов
+            if (!IsPlayerTurn)
             {
-                if (bot == null || bot.MoveWasMade) continue;
+                bool botFound = false;
 
-                bot.MoveWasMade = true;
-                botFound = bot.TurnState(true);
+                // Ищем бота который может ходить
+                foreach (var bot in gameManager.BotManagers)
+                {
+                    if (bot == null || bot.MoveWasMade) continue;
 
-                if (botFound) botManager = bot;
+                    bot.MoveWasMade = true;
+                    botFound = bot.TurnState(true);
 
-                break;
+                    if (botFound)
+                    {
+                        botManager = bot;
+                        hudManager.UpdateSideTurnText(true);
+                    }
+
+                    break;
+                }
+
+                // Если все боты сделали свой ход
+                if (!botFound)
+                {
+                    IsPlayerTurn = true;
+                    StartMove();
+
+                    return;
+                }
+            }
+            // Ход игрока
+            else
+            {
+                hudManager.UpdateSideTurnText(true, true);
+                playerManager.TurnState(true);
             }
 
-            // Если все боты сделали свой ход
-            if (!botFound)
-            {
-                IsPlayerTurn = true;
-                StartMove();
-
-                return;
-            }
-        }
-        // Ход игрока
-        else playerManager.TurnState(true);
-
-        StartTimer();
+            StartTimer();
+        });
     }
 
     // Заканчиваем ход
@@ -90,10 +95,30 @@ public class MovesSystem : MonoBehaviour
         else if (botManager != null) botManager.TurnState(false);
 
         // Начинаем ход заново
-        helper.PerformWithDelay(director.GameSettings.TurnSwitchDelay, () =>
-        {
-            StartMove();
-        });
+        StartMove(director.GameSettings.TurnSwitchDelay);
+    }
+
+    // Полность останавливаем ходы
+    public void FinishGame()
+    {
+        isGameFinished = true;
+
+        StopTimer();
+        ClearBots();
+        hudManager.UpdateSideTurnText(false);
+
+        if (!IsPlayerTurn && botManager != null) botManager.TurnState(false);
+        else playerManager.TurnState(false);
+
+        IsPlayerTurn = true;
+    }
+
+    // Перезапускаем ходы
+    public void RestartGame(float delay = 0)
+    {
+        isGameFinished = false;
+
+        StartMove(delay);
     }
 
     // Сбрасываем ходы всех ботов
@@ -128,14 +153,15 @@ public class MovesSystem : MonoBehaviour
         {
             elapsedTime += Time.deltaTime;
             currentTime = Mathf.Lerp(startValue, 0, elapsedTime / moveTime);
-            timerTMP.text = currentTime.ToString("F0");
+
+            hudManager.UpdateTimer(currentTime);
 
             yield return null;
         }
 
         currentTime = 0;
-        timerTMP.text = "0";
 
         StopMove();
+        hudManager.UpdateTimer(0);
     }
 }

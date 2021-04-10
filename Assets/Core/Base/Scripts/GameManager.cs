@@ -4,6 +4,9 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("TEMPORARY")]
+    [SerializeField] bool startMatch;
+
     [Header("Metas")]
     [SerializeField] WeaponsMeta weaponsMeta;
 
@@ -27,16 +30,23 @@ public class GameManager : MonoBehaviour
 
     public static GameManager Instance;
 
+    Director director;
+
     void Awake()
     {
         Instance = this;
         BotManagers = new List<BotManager>();
     }
 
-    // Сбрасываем игрока
-    public void ResetPlayer()
+    void Start()
     {
-        playerManager.RespawnPlayer();
+        director = Director.Instance;
+
+        Helper.Instance.PerformWithDelay(director.GameSettings.RoundStartDelay, () =>
+        {
+            if (startMatch)
+                movesSystem.StartMove();
+        });
     }
 
     // Добавляем бота в список ботов
@@ -55,5 +65,19 @@ public class GameManager : MonoBehaviour
     public void OnMoveEnded()
     {
         MovesSystem.StopMove();
+    }
+
+    // При проигрыше
+    public void GameOver()
+    {
+        movesSystem.FinishGame();
+        gameOverManager.MenuState(true);
+    }
+
+    // При нажатии на "Продолжить игру"
+    public void OnContinueButtonPressed()
+    {
+        playerManager.RespawnPlayer();
+        movesSystem.RestartGame(director.GameSettings.TurnSwitchDelay);
     }
 }
