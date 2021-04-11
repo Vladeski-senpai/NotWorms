@@ -9,6 +9,8 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     [Header("Settings")]
+    [SerializeField] Color defaultCursorColor;
+    [SerializeField] Color activeCursorColor;
     [SerializeField] NicknameColor[] nicknameColors;
 
     [Header("References")]
@@ -20,6 +22,8 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] TMP_Dropdown colorsDropdown;
     [SerializeField] Button defaultColorsButton;
     [SerializeField] Button customColorButton;
+    [SerializeField] Image defaultCursorButton;
+    [SerializeField] Image trajectoryCursorButton;
     [SerializeField] TMP_InputField[] colorsIFs;
 
     Director director;
@@ -31,6 +35,7 @@ public class MainMenuManager : MonoBehaviour
 
         ColorButtonsState();
         SetUpColorsDropdown();
+        CursorButtonsColors();
         SetUpIFs();
 
         canChangeColor = true;
@@ -91,6 +96,14 @@ public class MainMenuManager : MonoBehaviour
 
         foreach (var button in colorsIFs)
             button.interactable = customColor;
+    }
+
+    void CursorButtonsColors()
+    {
+        bool defaultCursor = director.GameMeta.DefaultCursor;
+
+        defaultCursorButton.color = defaultCursor ? activeCursorColor : defaultCursorColor;
+        trajectoryCursorButton.color = defaultCursor ? defaultCursorColor : activeCursorColor;
     }
 
     // Проверяем текст на ошибки
@@ -162,9 +175,17 @@ public class MainMenuManager : MonoBehaviour
             OnColorsDropdownChanged();
     }
 
+    // При нажатии на "Выбрать курсор"
+    public void OnCursorButtonPressed(bool defaultCursor)
+    {
+        director.GameMeta.DefaultCursor = defaultCursor;
+        CursorButtonsColors();
+    }
+
     // При нажатии на "Играть"
     public void OnPlayButtonPressed()
     {
+        SaveSystem.Save();
         ScenesManager.Instance.LoadScene(1);
     }
 }

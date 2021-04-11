@@ -36,8 +36,6 @@ public class GameOverManager : MonoBehaviour
 
         if (show)
         {
-            Cursor.visible = true;
-
             helper.PerformWithDelay(adBtnShakeDelay, () =>
             {
                 adTweener = adButtonRT.DOShakeAnchorPos(adBtnShakeDuration, adBtnShakeVector, adBtnShakeVibrato, adBtnShakeRandomness);

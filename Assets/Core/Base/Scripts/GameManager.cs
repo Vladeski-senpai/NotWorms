@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    [Header("TEMPORARY")]
-    [SerializeField] bool startMatch;
-
     [Header("Metas")]
     [SerializeField] WeaponsMeta weaponsMeta;
 
@@ -42,7 +39,7 @@ public class GameManager : MonoBehaviour
     {
         director = Director.Instance;
 
-        if (startMatch) movesSystem.StartMove(director.GameSettings.RoundStartDelay);
+        movesSystem.StartMove(director.GameSettings.RoundStartDelay);
     }
 
     // Добавляем бота в список ботов

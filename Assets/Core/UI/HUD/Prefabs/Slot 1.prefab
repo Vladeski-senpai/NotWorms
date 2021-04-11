@@ -57,7 +57,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rectTransform: {fileID: 1495190178480366976}
-  scaleMultiplier: 0.85
+  scaleMultiplier: 0.9
   scaleAnimationTime: 0.05
   checkInteractable: 1
 --- !u!114 &300635058757535009

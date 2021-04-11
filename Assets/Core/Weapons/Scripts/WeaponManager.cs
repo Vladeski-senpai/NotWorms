@@ -26,7 +26,6 @@ public class WeaponManager : MonoBehaviour
         Vector2 lookDirection = (aim.CursorPosition - transform.position).normalized;
 
         shell.transform.position = aim.SpawnPoint.position;
-        shell.RBody.drag = aim.ShellLinearDrag;
         shell.RBody.gravityScale = aim.ShellGravityScale;
         shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
 
@@ -40,7 +39,6 @@ public class WeaponManager : MonoBehaviour
         Vector2 lookDirection = (aim.CursorPosition - transform.position).normalized;
 
         shell.transform.position = aim.SpawnPoint.position;
-        shell.RBody.drag = aim.ShellLinearDrag;
         shell.RBody.gravityScale = aim.ShellGravityScale;
         shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
 

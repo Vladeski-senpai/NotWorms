@@ -4,8 +4,6 @@ using UnityEngine;
 public class CameraController : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float cameraAimTime;
-    [SerializeField] float yOffset;
     [SerializeField] ShakeSettings[] shakeSettings;
 
     [Header("References")]
@@ -13,6 +11,7 @@ public class CameraController : MonoBehaviour
 
     public static CameraController Instance;
 
+    GameSettings gameSettings;
     Coroutine cameraAimCO;
     Coroutine shakeCO;
     Transform target;
@@ -23,6 +22,11 @@ public class CameraController : MonoBehaviour
     void Awake()
     {
         Instance = this;
+    }
+
+    void Start()
+    {
+        gameSettings = Director.Instance.GameSettings;
     }
 
     void LateUpdate()
@@ -36,7 +40,7 @@ public class CameraController : MonoBehaviour
         if (!isActive || target == null) return;
 
         newPosition = target.position;
-        newPosition.y += yOffset;
+        newPosition.y += gameSettings.YOffset;
 
         if (canMove) transform.position = newPosition;
     }
@@ -98,10 +102,10 @@ public class CameraController : MonoBehaviour
 
         canMove = false;
 
-        while (elapsedTime < cameraAimTime)
+        while (elapsedTime < gameSettings.CameraAimTime)
         {
             elapsedTime += Time.deltaTime;
-            transform.position = Vector3.Lerp(startPosition, newPosition, elapsedTime / cameraAimTime);
+            transform.position = Vector3.Lerp(startPosition, newPosition, elapsedTime / gameSettings.CameraAimTime);
 
             yield return null;
         }

@@ -4,9 +4,6 @@ using UnityEngine;
 
 public class MovesSystem : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] float moveTime;
-
     [Header("References")]
     [SerializeField] GameManager gameManager;
     [SerializeField] HUDManager hudManager;
@@ -19,6 +16,7 @@ public class MovesSystem : MonoBehaviour
     Coroutine timerCO;
     Director director;
     float currentTime;
+    float moveTime;
     bool isGameFinished;
 
     void Start()
@@ -26,6 +24,7 @@ public class MovesSystem : MonoBehaviour
         director = Director.Instance;
         playerManager = gameManager.PlayerManager;
         IsPlayerTurn = true;
+        moveTime = director.GameSettings.MoveTime;
 
         hudManager.UpdateSideTurnText(false);
     }

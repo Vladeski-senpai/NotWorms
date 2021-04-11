@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -36,6 +34,7 @@ public class PlayerManager : MonoBehaviour
     float jumpTime;
     float aimHoldTime;
     bool isJumpHolding;
+    bool defaultCursor;
     bool onGround;
     bool canShoot;
     bool canJump;
@@ -52,6 +51,7 @@ public class PlayerManager : MonoBehaviour
         cameraController = gameManager.CameraController;
         nicknameTMP.text = director.GameMeta.PlayerName;
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
+        defaultCursor = director.GameMeta.DefaultCursor;
         health = playerSettings.StartHealth;
     }
 
@@ -103,7 +103,6 @@ public class PlayerManager : MonoBehaviour
             aimHoldTime = playerSettings.AimHoldTimer;
             isJumpHolding = true;
             canShoot = false;
-            Cursor.visible = true;
             crosshair.SetActive(false);
             aim.PointsState(false);
 
@@ -127,9 +126,8 @@ public class PlayerManager : MonoBehaviour
         if (isJumpHolding && aimHoldTime < 0 && !canShoot)
         {
             canShoot = true;
-            crosshair.SetActive(true);
+            crosshair.SetActive(defaultCursor);
             aim.PointsState(true);
-            Cursor.visible = false;
         }
 
         if (Input.GetKeyUp(KeyCode.Space)) isJumpHolding = false;
@@ -198,9 +196,7 @@ public class PlayerManager : MonoBehaviour
         canMove = _canMove;
         moveDirection = Vector2.zero;
         canShoot = false;
-        canJump = true;
         isJumpHolding = false;
-        Cursor.visible = canMove;
 
         aim.PointsState(false);
         crosshair.SetActive(false);
@@ -209,7 +205,6 @@ public class PlayerManager : MonoBehaviour
     // Прыгаем
     void DoJump()
     {
-        Debug.LogWarning("JUMP");
         rbody.AddForce(Vector2.up * playerSettings.JumpStrength, ForceMode2D.Impulse);
     }
 

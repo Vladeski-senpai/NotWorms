@@ -2,15 +2,6 @@ using UnityEngine;
 
 public class Aim : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] float aimDistance;
-    [SerializeField] float launchSpeed;
-    [SerializeField] float shellLinearDrag;
-    [SerializeField] float shellGravityScale;
-    [SerializeField] float trajectoryTimeMultilpier;
-    [SerializeField] int pointsCount;
-    [SerializeField] bool showTrajectory;
-
     [Header("References")]
     [SerializeField] Camera cam;
     [SerializeField] Transform crosshair;
@@ -22,21 +13,29 @@ public class Aim : MonoBehaviour
     // Other
     public Transform SpawnPoint => spawnPoint;
     public Vector3 CursorPosition => cursorPosition;
-    public float LaunchSpeed => launchSpeed;
-    public float ShellLinearDrag => shellLinearDrag;
-    public float ShellGravityScale => shellGravityScale;
+    public float LaunchSpeed => playerSettings.LaunchSpeed;
+    public float ShellGravityScale => playerSettings.ShellGravityScale;
 
     GameObject[] points;
+    PlayerSettings playerSettings;
     Vector3 cursorPosition;
     Vector3 lookDirection;
-    float lookAngle;
+    bool showTrajectory;
 
     void Start()
     {
-        points = new GameObject[pointsCount];
+        playerSettings = Director.Instance.PlayerSettings;
+        showTrajectory = !Director.Instance.GameMeta.DefaultCursor;
 
-        for (int i = 0; i < pointsCount; i++)
+        if (!showTrajectory) return;
+
+        points = new GameObject[playerSettings.PointsCount];
+
+        for (int i = 0; i < playerSettings.PointsCount; i++)
+        {
             points[i] = Instantiate(trajectoryPoint, transform.position, Quaternion.identity, pointsContainer);
+            points[i].GetComponent<SpriteRenderer>().color = playerSettings.TrajectoryColor;
+        }
 
         PointsState(false);
     }
@@ -61,22 +60,24 @@ public class Aim : MonoBehaviour
         //lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
 
         //crosshair.rotation = Quaternion.AngleAxis(lookAngle, Vector3.forward);
-        crosshair.localPosition = Vector2.ClampMagnitude(lookDirection.normalized * 10, aimDistance);
+        crosshair.localPosition = Vector2.ClampMagnitude(lookDirection.normalized * 10, playerSettings.AimDistance);
     }
 
     // Обновляем траекторию снаряда
     public void UpdateTrajectory()
     {
+        if (!showTrajectory) return;
+
         Vector2 lookDirection = (cursorPosition - transform.position).normalized;
 
-        for (int i = 0; i < pointsCount; i++)
-            points[i].transform.position = PointPosition(lookDirection, i * trajectoryTimeMultilpier);
+        for (int i = 0; i < playerSettings.PointsCount; i++)
+            points[i].transform.position = PointPosition(lookDirection, i * playerSettings.TrajectoryTimeMultilpier);
     }
 
     // Включаем/выключаем точки в траектории
     public void PointsState(bool show)
     {
-        if (show && !showTrajectory) return;
+        if (show || !showTrajectory) return;
 
         foreach (var point in points)
             point.SetActive(show);
@@ -85,8 +86,8 @@ public class Aim : MonoBehaviour
     // Находим позицию для точки в траектории
     Vector2 PointPosition(Vector2 lookDirection, float t)
     {
-        Vector2 currentPosition = (Vector2)spawnPoint.position + (lookDirection * launchSpeed * t) +
-            0.5f * (Physics2D.gravity * shellGravityScale) * (t * t);
+        Vector2 currentPosition = (Vector2)spawnPoint.position + (lookDirection * playerSettings.LaunchSpeed * t) +
+            0.5f * (Physics2D.gravity * playerSettings.ShellGravityScale) * (t * t);
 
         return currentPosition;
     }

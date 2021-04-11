@@ -4,15 +4,6 @@ using UnityEngine.UI;
 
 public class BotManager : MonoBehaviour
 {
-    [Header("Settings")]
-    [SerializeField] float startHealth;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float damage;
-    [SerializeField] float minShootDistance;
-    [SerializeField] float maxShootDistance;
-    [SerializeField] float minShootHeight;
-    [SerializeField] float maxShootHeight;
-
     [Header("References")]
     [SerializeField] TextMeshProUGUI nicknameTMP;
     [SerializeField] Image healthSlider;
@@ -26,6 +17,7 @@ public class BotManager : MonoBehaviour
 
     CameraController cameraController;
     PlayerManager playerManager;
+    BotsSettings botsSettings;
     GameManager gameManager;
     Transform shootPoint;
     Transform player;
@@ -37,10 +29,11 @@ public class BotManager : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         helper = Helper.Instance;
+        botsSettings = Director.Instance.BotsSettings;
         cameraController = gameManager.CameraController;
         playerManager = gameManager.PlayerManager;
         player = playerManager.transform;
-        health = startHealth;
+        health = botsSettings.StartHealth;
 
         SetNickname();
         gameManager.RegisterBot(this);
@@ -55,7 +48,7 @@ public class BotManager : MonoBehaviour
 
     void Movement()
     {
-        transform.position = Vector2.MoveTowards(transform.position, shootPoint.position, moveSpeed * Time.deltaTime);
+        transform.position = Vector2.MoveTowards(transform.position, shootPoint.position, botsSettings.MoveSpeed * Time.deltaTime);
     }
 
     void Shoot()
@@ -63,13 +56,14 @@ public class BotManager : MonoBehaviour
         helper.PerformWithDelay(1, () =>
         {
             var shell = Instantiate(shellPrefab);
-            shell.Init(false, damage);
+            shell.Init(false, botsSettings.Damage);
             shell.transform.position = aimPoint.position;
 
-            float accuracy = Random.Range(2.9f, 3.6f); // 3.3f - 100% hit accuracy
+            // accuracy = 3.3f - 100% hit accuracy
+            float accuracy = Random.Range(botsSettings.MinAccuracy, botsSettings.MaxAccuracy); 
 
             bool canShoot = BotAim.solve_ballistic_arc_lateral(aimPoint.position, player.position, accuracy,
-                Random.Range(minShootHeight, maxShootHeight), out Vector3 s0, out float s1);
+                Random.Range(botsSettings.MinShootHeight, botsSettings.MaxShootHeight), out Vector3 s0, out float s1);
 
             if (!canShoot) return;
 
@@ -91,7 +85,7 @@ public class BotManager : MonoBehaviour
         }
 
         health = finalHealth;
-        healthSlider.fillAmount = health / startHealth;
+        healthSlider.fillAmount = health / botsSettings.StartHealth;
 
         // Трясём камеру
         if (shake) cameraController.Shake(0);
@@ -109,9 +103,12 @@ public class BotManager : MonoBehaviour
 
         if (canMove)
         {
-            if (shootPoint == null)
+            if (shootPoint == null || Vector2.Distance(transform.position, player.position) > botsSettings.ShootPointDestroyDistance)
             {
-                float shootDistance = Random.Range(minShootDistance, maxShootDistance);
+                if (shootPoint != null)
+                    Destroy(shootPoint.gameObject);
+
+                float shootDistance = Random.Range(botsSettings.MinShootDistance, botsSettings.MaxShootDistance);
                 var point = Instantiate(shootPointPrefab);
 
                 point.SetPosition(player, transform.position.y, shootDistance);

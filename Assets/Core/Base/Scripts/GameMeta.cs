@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "GameMeta", menuName = "Meta/GameMeta", order = 2)]
@@ -8,6 +6,7 @@ public class GameMeta : ScriptableObject
     [Header("Game")]
     [SerializeField] string playerName;
     [SerializeField] Color playerNameColor;
+    [SerializeField] bool defaultCursor = true;
 
     [Header("Main Menu")]
     [SerializeField] NicknameColors colorID;
@@ -20,6 +19,7 @@ public class GameMeta : ScriptableObject
     // Game
     public string PlayerName { get => playerName; set => playerName = value; }
     public Color PlayerNameColor { get => playerNameColor; set => playerNameColor = value; }
+    public bool DefaultCursor { get => defaultCursor; set => defaultCursor = value; }
 
     // Main Menu
     public NicknameColors ColorID { get => colorID; set => colorID = value; }

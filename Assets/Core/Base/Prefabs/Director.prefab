@@ -10,6 +10,8 @@ GameObject:
   m_Component:
   - component: {fileID: 6474924906909033912}
   - component: {fileID: 6474924906909033913}
+  - component: {fileID: 7755152812023284822}
+  - component: {fileID: 1215405855584357408}
   m_Layer: 0
   m_Name: Director
   m_TagString: Untagged
@@ -44,25 +46,74 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameSettings:
+    moveTime: 15
     nickNameMaxLength: 13
     roundStartDelay: 5.49
     turnSwitchDelay: 3.49
+    cameraAimTime: 0.5
+    yOffset: 4
     botNames:
     - Antony
     - John
     - Stan
     - Kyle
     - Max
-    - Brown
+    - Jesus
     - Vlad
     - Snowflake
     - Mike
     - George
     - Elon Musk
+    - God
+    - Batman
+    - Hitman
+    - Deadpool
   playerSettings:
     startHealth: 100
     moveSpeed: 8
     jumpStrength: 40
     jumpTimer: 0.45
     aimHoldTimer: 1
+    aimDistance: 3.5
+    launchSpeed: 12
+    shellGravityScale: 1
+    trajectoryTimeMultilpier: 0.1
+    pointsCount: 25
+    trajectoryColor: {r: 1, g: 0.6904891, b: 0.25943398, a: 1}
+    showTrajectory: 0
+  botsSettings:
+    startHealth: 100
+    damage: 15
+    moveSpeed: 3
+    minAccuracy: 2.9
+    maxAccuracy: 3.6
+    minShootDistance: 4
+    maxShootDistance: 13
+    shootPointDestroyDistance: 22
+    minShootHeight: 1
+    maxShootHeight: 7
   gameMeta: {fileID: 11400000, guid: 4c8970b63a790274f8b819ddaa8a60b2, type: 2}
+--- !u!114 &7755152812023284822
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6474924906909033915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 40b9a3028c1259d489ec1f25d5d1846d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1215405855584357408
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6474924906909033915}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0064e8ad35507054fa8f330ff17f6ae2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
