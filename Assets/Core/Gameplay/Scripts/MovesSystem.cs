@@ -142,7 +142,7 @@ public class MovesSystem : MonoBehaviour
     }
 
     // Останавливаем таймер
-    void StopTimer()
+    public void StopTimer()
     {
         if (timerCO != null)
             StopCoroutine(timerCO);

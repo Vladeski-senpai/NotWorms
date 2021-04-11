@@ -32,9 +32,7 @@ public class ShellManager : MonoBehaviour
     {
         isAlly = _isAlly;
         impactDamage = damage;
-
-        // 9 - Player Shell layer, 10 - Enemy Shell layer
-        LayerMask.LayerToName(isAlly ? 9 : 10);
+       
         Destroy(gameObject, destroyTime);
     }
 

@@ -1,76 +1,51 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class BotAim : MonoBehaviour
+public class BotAim
 {
-    [SerializeField] float velocity;
-    [SerializeField] Transform target;
-    [SerializeField] Transform body;
-
-    void Start()
+    // Solve the firing arc with a fixed lateral speed. Vertical speed and gravity varies. 
+    // This enables a visually pleasing arc.
+    //
+    // proj_pos (Vector3): point projectile will fire from
+    // lateral_speed (float): scalar speed of projectile along XZ plane
+    // target_pos (Vector3): point projectile is trying to hit
+    // max_height (float): height above Max(proj_pos, impact_pos) for projectile to peak at
+    //
+    // fire_velocity (out Vector3): firing velocity
+    // gravity (out float): gravity necessary to projectile to hit precisely max_height
+    //
+    // return (bool): true if a valid solution was found
+    public static bool solve_ballistic_arc_lateral(Vector3 proj_pos, Vector3 target_pos, float lateral_speed,
+        float max_height, out Vector3 fire_velocity, out float gravity)
     {
+        // Handling these cases is up to your project's coding standards
+        Debug.Assert(proj_pos != target_pos && lateral_speed > 0 && max_height > proj_pos.y, "fts.solve_ballistic_arc called with invalid data");
 
-    }
+        fire_velocity = Vector3.zero;
+        gravity = float.NaN;
 
-    void Update()
-    {
-        // Shooting
-        if (Input.GetKeyDown(KeyCode.G)) Shoot();
-    }
+        Vector3 diff = target_pos - proj_pos;
+        Vector3 diffXZ = new Vector3(diff.x, 0f, diff.z);
+        float lateralDist = diffXZ.magnitude;
 
-    void Shoot()
-    {
-        float angle;
-        CalculateTrajectory(transform.position, target.position, velocity, out angle);
-
-        Debug.Log("Angle " + angle);
-
-        body.rotation = AimRotation(transform.position, target.position, velocity);
-    }
-
-    bool CalculateTrajectory(Vector3 start, Vector3 end, float muzzleVelocity, out float angle)
-    {
-        //, out float highAngle){
-
-        Vector3 dir = end - start;
-        float vSqr = muzzleVelocity * muzzleVelocity;
-        float y = dir.y;
-        dir.y = 0.0f;
-        float x = dir.sqrMagnitude;
-        float g = -Physics.gravity.y;
-
-        float uRoot = vSqr * vSqr - g * (g * (x) + (2.0f * y * vSqr));
-
-
-        if (uRoot < 0.0f)
-        {
-
-            //target out of range.
-            angle = -45.0f;
-            //highAngle = -45.0f;
+        if (lateralDist == 0)
             return false;
-        }
 
-        //        float r = Mathf.Sqrt (uRoot);
-        //        float bottom = g * Mathf.Sqrt (x);
+        float time = lateralDist / lateral_speed;
 
-        angle = -Mathf.Atan2(g * Mathf.Sqrt(x), vSqr + Mathf.Sqrt(uRoot)) * Mathf.Rad2Deg;
-        //highAngle = -Mathf.Atan2 (bottom, vSqr - r) * Mathf.Rad2Deg;
+        fire_velocity = diffXZ.normalized * lateral_speed;
+
+        // System of equations. Hit max_height at t=.5*time. Hit target at t=time.
+        //
+        // peak = y0 + vertical_speed*halfTime + .5*gravity*halfTime^2
+        // end = y0 + vertical_speed*time + .5*gravity*time^s
+        // Wolfram Alpha: solve b = a + .5*v*t + .5*g*(.5*t)^2, c = a + vt + .5*g*t^2 for g, v
+        float a = proj_pos.y;       // initial
+        float b = max_height;       // peak
+        float c = target_pos.y;     // final
+
+        gravity = -4 * (a - 2 * b + c) / (time * time);
+        fire_velocity.y = -(3 * a - 4 * b + c) / time;
+
         return true;
-
-    }
-
-    Quaternion AimRotation(Vector3 start, Vector3 end, float velocity)
-    {
-
-        float low;
-        //float high;
-        CalculateTrajectory(start, end, velocity, out low);//, out high); //get the angle
-
-
-        Vector3 wantedRotationVector = Quaternion.LookRotation(end - start).eulerAngles; //get the direction
-        wantedRotationVector.x = low; //combine the two
-        return Quaternion.Euler(wantedRotationVector); //into a quaternion
     }
 }

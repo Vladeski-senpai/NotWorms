@@ -54,8 +54,6 @@ public class PlayerManager : MonoBehaviour
         nicknameTMP.text = director.GameMeta.PlayerName;
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
         health = startHealth;
-
-        canMove = true; // TEMP
     }
 
     void Update()
@@ -179,6 +177,7 @@ public class PlayerManager : MonoBehaviour
 
         health = finalHealth;
         healthSlider.fillAmount = health / startHealth;
+        gameManager.OnMoveEnded();
     }
 
     // Воскрешаем игрока
