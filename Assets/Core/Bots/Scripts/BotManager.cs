@@ -24,6 +24,7 @@ public class BotManager : MonoBehaviour
     public int TurnsSkip { get; set; }
     public bool MoveWasMade { get; set; }
 
+    CameraController cameraController;
     PlayerManager playerManager;
     GameManager gameManager;
     Transform shootPoint;
@@ -36,6 +37,7 @@ public class BotManager : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         helper = Helper.Instance;
+        cameraController = gameManager.CameraController;
         playerManager = gameManager.PlayerManager;
         player = playerManager.transform;
         health = startHealth;
@@ -77,7 +79,7 @@ public class BotManager : MonoBehaviour
     }
 
     // Наносим урон боту
-    public void DoDamage(float amount)
+    public void DoDamage(float amount, bool shake = false)
     {
         float finalHealth = health - amount;
 
@@ -90,6 +92,9 @@ public class BotManager : MonoBehaviour
 
         health = finalHealth;
         healthSlider.fillAmount = health / startHealth;
+
+        // Трясём камеру
+        if (shake) cameraController.Shake(0);
     }
 
     // Может ли игрок ходить

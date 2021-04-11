@@ -77,8 +77,8 @@ public class ShellManager : MonoBehaviour
 
             if (botManager != null)
             {
-                botManager.DoDamage(impactDamage);
-                Die();
+                botManager.DoDamage(impactDamage, true);
+                //Die();
 
                 // ≈сли оружие поджигающего типа, начинаем наносить переодический урон
                 if (weaponMeta.WeaponType == WeaponType.Fiery) StartPeriodicDamage();
@@ -93,8 +93,11 @@ public class ShellManager : MonoBehaviour
             if (playerManager != null)
             {
                 playerManager.DoDamage(impactDamage);
-                Die();
+                //Die();
             }
         }
+
+        Die();
+        GameManager.Instance.OnMoveEnded();
     }
 }

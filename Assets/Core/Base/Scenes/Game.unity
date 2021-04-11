@@ -615,6 +615,7 @@ MonoBehaviour:
   hudManager: {fileID: 553460376}
   playerManager: {fileID: 912722161}
   movesSystem: {fileID: 1730387892}
+  cameraController: {fileID: 1183154730}
 --- !u!114 &448669343
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -715,7 +716,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'move ends in:'
+  m_text: move ends in
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
   m_sharedMaterial: {fileID: 2164040, guid: 5302535af1044152a457ed104f1f4b91, type: 2}
@@ -954,6 +955,7 @@ GameObject:
   - component: {fileID: 553460376}
   - component: {fileID: 553460375}
   - component: {fileID: 553460374}
+  - component: {fileID: 553460377}
   m_Layer: 5
   m_Name: HUD
   m_TagString: Untagged
@@ -1035,11 +1037,29 @@ MonoBehaviour:
   enemyTurnColor: {r: 1, g: 0.4392157, b: 0.4392157, a: 1}
   turnSideTMP: {fileID: 182308202}
   turnTMP: {fileID: 1186061340}
+  timerTitleTMP: {fileID: 498554127}
   timerTMP: {fileID: 698339472}
   weaponSlots:
   - {fileID: 1495190178123187822}
   - {fileID: 682507417}
   - {fileID: 927841732}
+--- !u!114 &553460377
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 553460372}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dc42784cf147c0c48a680349fa168899, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_IgnoreReversedGraphics: 1
+  m_BlockingObjects: 0
+  m_BlockingMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
 --- !u!1 &558813066
 GameObject:
   m_ObjectHideFlags: 0
@@ -1533,6 +1553,54 @@ PrefabInstance:
     - target: {fileID: 300635058757535009, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: selectedColor.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 553460376}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 912722165}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ChangeWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HUDManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: WeaponManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1495190178480366976, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: m_Pivot.x
@@ -2365,11 +2433,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9b54807c31b347c49bfaef9a4a4baa1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 100
-  moveSpeed: 8
-  jumpStrength: 40
-  jumpTimer: 0.45
-  jumpHoldTimer: 1
   checkRadius: 0.39
   groundLM:
     serializedVersion: 2
@@ -2421,11 +2484,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   aimDistance: 3.5
-  launchSpeed: 10
+  launchSpeed: 12
   shellLinearDrag: 0
-  shellGravityScale: 0.5
+  shellGravityScale: 1
   trajectoryTimeMultilpier: 0.1
-  pointsCount: 200
+  pointsCount: 30
   showTrajectory: 1
   cam: {fileID: 722559589}
   crosshair: {fileID: 481440054}
@@ -2476,6 +2539,54 @@ PrefabInstance:
     - target: {fileID: 300635058757535009, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: selectedColor.r
       value: 0.4745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 553460376}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 912722165}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ChangeWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HUDManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: WeaponManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_IntArgument
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1495190178480366976, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: m_Pivot.x
@@ -2949,10 +3060,10 @@ MonoBehaviour:
   cameraAimTime: 0.5
   yOffset: 4
   shakeSettings:
-  - MinShakingDuration: 0.1
-    MaxShakingDuration: 0.15
-    MinShakingMagnitude: 0.15
-    MaxShakingMagnitude: 0.3
+  - MinShakingDuration: 0.13
+    MaxShakingDuration: 0.2
+    MinShakingMagnitude: 0.25
+    MaxShakingMagnitude: 0.35
   shakeContainer: {fileID: 681654733}
 --- !u!1 &1186061338
 GameObject:
@@ -3388,6 +3499,7 @@ MonoBehaviour:
   rectTransform: {fileID: 1196704789}
   scaleMultiplier: 0.85
   scaleAnimationTime: 0.05
+  checkInteractable: 0
 --- !u!1 &1199206024
 GameObject:
   m_ObjectHideFlags: 0
@@ -4018,6 +4130,7 @@ MonoBehaviour:
   rectTransform: {fileID: 1493382156}
   scaleMultiplier: 0.85
   scaleAnimationTime: 0.05
+  checkInteractable: 0
 --- !u!1 &1580627966
 GameObject:
   m_ObjectHideFlags: 0
@@ -4072,7 +4185,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   startHealth: 100
   moveSpeed: 3.5
-  damage: 5
+  damage: 15
   minShootDistance: 4
   maxShootDistance: 15
   minShootHeight: 2
@@ -4206,7 +4319,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 18f3677646258084586de83af77c3c89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveTime: 5
+  moveTime: 20
   gameManager: {fileID: 448669342}
   hudManager: {fileID: 553460376}
   cameraController: {fileID: 1183154730}
@@ -5208,6 +5321,46 @@ PrefabInstance:
     - target: {fileID: 300635058757535009, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: selectedColor.r
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 553460376}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
+      value: 
+      objectReference: {fileID: 912722165}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: SelectWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
+      value: ChangeWeapon
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: HUDManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
+      value: WeaponManager, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 1446047401540104645, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 1495190178480366976, guid: 77c29118cb411f44a89eb891e2c92b07, type: 3}
       propertyPath: m_Pivot.x

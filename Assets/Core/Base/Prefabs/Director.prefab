@@ -45,11 +45,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   gameSettings:
     nickNameMaxLength: 13
-    roundStartDelay: 2
-    turnSwitchDelay: 2
-    startHealth: 0
-    moveSpeed: 0
-    jumpStrength: 0
+    roundStartDelay: 5.49
+    turnSwitchDelay: 3.49
     botNames:
     - Antony
     - John
@@ -62,4 +59,10 @@ MonoBehaviour:
     - Mike
     - George
     - Elon Musk
+  playerSettings:
+    startHealth: 100
+    moveSpeed: 8
+    jumpStrength: 40
+    jumpTimer: 0.45
+    aimHoldTimer: 1
   gameMeta: {fileID: 11400000, guid: 4c8970b63a790274f8b819ddaa8a60b2, type: 2}

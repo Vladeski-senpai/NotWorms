@@ -18,14 +18,12 @@ public class MovesSystem : MonoBehaviour
     BotManager botManager;
     Coroutine timerCO;
     Director director;
-    Helper helper;
     float currentTime;
     bool isGameFinished;
 
     void Start()
     {
         director = Director.Instance;
-        helper = Helper.Instance;
         playerManager = gameManager.PlayerManager;
         IsPlayerTurn = true;
 
@@ -35,53 +33,57 @@ public class MovesSystem : MonoBehaviour
     // Начинаем ход
     public void StartMove(float delay = 0)
     {
-        helper.PerformWithDelay(delay, () =>
+        if (isGameFinished) return;
+
+        StartCoroutine(PreparationTimer(delay));
+    }
+
+    void Move()
+    {
+        // Ход ботов
+        if (!IsPlayerTurn)
         {
-            if (isGameFinished) return;
+            bool botFound = false;
 
-            // Ход ботов
-            if (!IsPlayerTurn)
+            // Ищем бота который может ходить
+            foreach (var bot in gameManager.BotManagers)
             {
-                bool botFound = false;
+                if (bot == null || bot.MoveWasMade) continue;
 
-                // Ищем бота который может ходить
-                foreach (var bot in gameManager.BotManagers)
+                bot.MoveWasMade = true;
+                botFound = bot.TurnState(true);
+
+                // Если бот может ходить
+                if (botFound)
                 {
-                    if (bot == null || bot.MoveWasMade) continue;
-
-                    bot.MoveWasMade = true;
-                    botFound = bot.TurnState(true);
-
-                    // Если бот может ходить
-                    if (botFound)
-                    {
-                        botManager = bot;
-                        hudManager.UpdateSideTurnText(true);
-                        cameraController.ChangeTarget(bot.transform);
-                    }
-
-                    break;
+                    botManager = bot;
+                    hudManager.UpdateSideTurnText(true);
+                    hudManager.WeaponSlotButtonsState(false);
+                    cameraController.ChangeTarget(bot.transform);
                 }
 
-                // Если все боты сделали свой ход
-                if (!botFound)
-                {
-                    IsPlayerTurn = true;
-                    StartMove();
-
-                    return;
-                }
+                break;
             }
-            // Ход игрока
-            else
+
+            // Если все боты сделали свой ход
+            if (!botFound)
             {
-                hudManager.UpdateSideTurnText(true, true);
-                playerManager.TurnState(true);
-                cameraController.ChangeTarget(playerManager.transform);
-            }
+                IsPlayerTurn = true;
+                StartMove();
 
-            StartTimer();
-        });
+                return;
+            }
+        }
+        // Ход игрока
+        else
+        {
+            hudManager.UpdateSideTurnText(true, true);
+            hudManager.WeaponSlotButtonsState(true);
+            playerManager.TurnState(true);
+            cameraController.ChangeTarget(playerManager.transform);
+        }
+
+        StartTimer();
     }
 
     // Заканчиваем ход
@@ -168,5 +170,22 @@ public class MovesSystem : MonoBehaviour
 
         StopMove();
         hudManager.UpdateTimer(0);
+    }
+
+    // Подготовка перед ходом
+    IEnumerator PreparationTimer(float time)
+    {
+        float elapsedTime = 0;
+
+        while (elapsedTime < time)
+        {
+            elapsedTime += Time.deltaTime;
+            hudManager.UpdatePreparationText(Mathf.Lerp(time, 0, elapsedTime / time));
+
+            yield return null;
+        }
+
+        hudManager.UpdatePreparationText(0, false);
+        Move();
     }
 }

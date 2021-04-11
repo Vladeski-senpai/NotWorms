@@ -9,6 +9,9 @@ public class WeaponSlot : MonoBehaviour
     [Header("References")]
     [SerializeField] RectTransform rectTransform;
     [SerializeField] Image outline;
+    [SerializeField] Button button;
+
+    public Button Button => button;
 
     Transitions transitions;
     Coroutine scaleCO;

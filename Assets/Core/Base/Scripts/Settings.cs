@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
@@ -10,11 +8,6 @@ public class GameSettings
     [SerializeField] int nickNameMaxLength;
     [SerializeField] float roundStartDelay;
     [SerializeField] float turnSwitchDelay;
-
-    [Header("Player settings")]
-    [SerializeField] float startHealth;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float jumpStrength;
 
     [Header("Bots settins")]
     [SerializeField] string[] botNames;
@@ -27,4 +20,21 @@ public class GameSettings
 
     // Bots settings
     public string[] BotNames => botNames;
+}
+
+[System.Serializable]
+public class PlayerSettings
+{
+    [SerializeField] float startHealth;
+    [SerializeField] float moveSpeed;
+    [SerializeField] float jumpStrength;
+    [SerializeField] float jumpTimer;
+    [SerializeField] float aimHoldTimer;
+
+
+    public float StartHealth => startHealth;
+    public float MoveSpeed => moveSpeed;
+    public float JumpStrength => jumpStrength;
+    public float JumpTimer => jumpTimer;
+    public float AimHoldTimer => aimHoldTimer;
 }

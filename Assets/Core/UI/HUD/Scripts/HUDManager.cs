@@ -15,6 +15,7 @@ public class HUDManager : MonoBehaviour
     [Header("References")]
     [SerializeField] TextMeshProUGUI turnSideTMP;
     [SerializeField] TextMeshProUGUI turnTMP;
+    [SerializeField] TextMeshProUGUI timerTitleTMP;
     [SerializeField] TextMeshProUGUI timerTMP;
     [SerializeField] WeaponSlot[] weaponSlots;
 
@@ -46,9 +47,23 @@ public class HUDManager : MonoBehaviour
         turnSideTMP.color = isPlayerTurn ? playerTurnColor : enemyTurnColor;
     }
 
+    // Обновляем текст с информацией и подготовке к ходу
+    public void UpdatePreparationText(float time, bool show = true)
+    {
+        timerTitleTMP.text = show ? "preparation" : "move ends in";
+        timerTMP.text = time.ToString("F0");
+    }
+
     // Обновляем время таймера
     public void UpdateTimer(float time)
     {
         timerTMP.text = time.ToString("F0");
+    }
+
+    // Включаем/выключаем кнопки слотов оружия
+    public void WeaponSlotButtonsState(bool activate)
+    {
+        foreach (var slot in weaponSlots)
+            slot.Button.interactable = activate;
     }
 }

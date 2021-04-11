@@ -7,6 +7,7 @@ public class Director : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] GameSettings gameSettings;
+    [SerializeField] PlayerSettings playerSettings;
 
     [Header("Meta")]
     [SerializeField] GameMeta gameMeta;
@@ -15,6 +16,7 @@ public class Director : MonoBehaviour
 
     // Settings
     public GameSettings GameSettings => gameSettings;
+    public PlayerSettings PlayerSettings => playerSettings;
 
     // Meta
     public GameMeta GameMeta => gameMeta;

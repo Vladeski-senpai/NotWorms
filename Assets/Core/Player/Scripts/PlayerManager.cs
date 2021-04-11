@@ -8,11 +8,6 @@ using UnityEngine.Events;
 public class PlayerManager : MonoBehaviour
 {
     [Header("Settings")]
-    [SerializeField] float startHealth;
-    [SerializeField] float moveSpeed;
-    [SerializeField] float jumpStrength;
-    [SerializeField] float jumpTimer;
-    [SerializeField] float jumpHoldTimer;
     [SerializeField] float checkRadius;
     [SerializeField] LayerMask groundLM;
 
@@ -30,14 +25,16 @@ public class PlayerManager : MonoBehaviour
     [Header("Events")]
     [SerializeField] UnityEvent<int> OnSelectWeaponEvent;
 
+    CameraController cameraController;
     WeaponManager weaponManager;
+    PlayerSettings playerSettings;
     GameManager gameManager;
     Director director;
     Aim aim;
     Vector2 moveDirection;
     float health;
     float jumpTime;
-    float jumpHoldTime;
+    float aimHoldTime;
     bool isJumpHolding;
     bool onGround;
     bool canShoot;
@@ -51,9 +48,11 @@ public class PlayerManager : MonoBehaviour
 
         gameManager = GameManager.Instance;
         director = Director.Instance;
+        playerSettings = director.PlayerSettings;
+        cameraController = gameManager.CameraController;
         nicknameTMP.text = director.GameMeta.PlayerName;
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
-        health = startHealth;
+        health = playerSettings.StartHealth;
     }
 
     void Update()
@@ -63,7 +62,10 @@ public class PlayerManager : MonoBehaviour
 
         if (!canMove) return;
 
+#if UNITY_STANDALONE || UNITY_EDITOR
         WeaponChooserHandler();
+#endif
+
         JumpHandler();
         AimHandler();
         MovementHandler();
@@ -74,10 +76,10 @@ public class PlayerManager : MonoBehaviour
     {
         if (!canMove) return;
 
-        rbody.position += moveDirection.normalized * moveSpeed * Time.fixedDeltaTime;
+        rbody.position += moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
     }
 
-    #region Handlers
+#region Handlers
 
     // Передвижение
     void MovementHandler()
@@ -97,8 +99,8 @@ public class PlayerManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             onGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLM);
-            jumpTime = jumpTimer;
-            jumpHoldTime = jumpHoldTimer;
+            jumpTime = playerSettings.JumpTimer;
+            aimHoldTime = playerSettings.AimHoldTimer;
             isJumpHolding = true;
             canShoot = false;
             Cursor.visible = true;
@@ -120,9 +122,9 @@ public class PlayerManager : MonoBehaviour
     // Обработчик прицеливания
     void AimHandler()
     {
-        jumpHoldTime -= Time.deltaTime;
+        aimHoldTime -= Time.deltaTime;
 
-        if (isJumpHolding && jumpHoldTime < 0 && !canShoot)
+        if (isJumpHolding && aimHoldTime < 0 && !canShoot)
         {
             canShoot = true;
             crosshair.SetActive(true);
@@ -143,12 +145,13 @@ public class PlayerManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0))
             {
                 weaponManager.Shoot();
-                gameManager.OnMoveEnded();
+                gameManager.MovesSystem.StopTimer();
+                TurnState(false);
             }
         }
     }
 
-    // Обработчик выбора оружия !!!!!!!!!!!! TEMPORARY !!!!!!!!!!!!!
+    // Обработчик выбора оружия
     void WeaponChooserHandler()
     {
         if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -161,7 +164,7 @@ public class PlayerManager : MonoBehaviour
             OnSelectWeaponEvent.Invoke(2);
     }
 
-    #endregion
+#endregion
 
     // Наносим урон игроку
     public void DoDamage(float amount)
@@ -176,15 +179,15 @@ public class PlayerManager : MonoBehaviour
         }
 
         health = finalHealth;
-        healthSlider.fillAmount = health / startHealth;
-        gameManager.OnMoveEnded();
+        healthSlider.fillAmount = health / playerSettings.StartHealth;
+        cameraController.Shake(0);
     }
 
     // Воскрешаем игрока
     public void RespawnPlayer()
     {
-        health = startHealth * 0.5f;
-        healthSlider.fillAmount = health / startHealth;
+        health = playerSettings.StartHealth * 0.5f;
+        healthSlider.fillAmount = health / playerSettings.StartHealth;
 
         gameObject.SetActive(true);
     }
@@ -195,6 +198,7 @@ public class PlayerManager : MonoBehaviour
         canMove = _canMove;
         moveDirection = Vector2.zero;
         canShoot = false;
+        canJump = true;
         isJumpHolding = false;
         Cursor.visible = canMove;
 
@@ -205,7 +209,8 @@ public class PlayerManager : MonoBehaviour
     // Прыгаем
     void DoJump()
     {
-        rbody.AddForce(Vector2.up * jumpStrength, ForceMode2D.Impulse);
+        Debug.LogWarning("JUMP");
+        rbody.AddForce(Vector2.up * playerSettings.JumpStrength, ForceMode2D.Impulse);
     }
 
     // Убиваем игрока
@@ -217,11 +222,11 @@ public class PlayerManager : MonoBehaviour
         gameObject.SetActive(false);
     }
 
-    void OnDrawGizmos()
+    /*void OnDrawGizmos()
     {
         if (!drawGizmos) return;
 
         Gizmos.color = groundCheckColor;
         Gizmos.DrawSphere(groundCheck.position, checkRadius);
-    }
+    }*/
 }

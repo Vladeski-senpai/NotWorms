@@ -15,15 +15,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] HUDManager hudManager;
     [SerializeField] PlayerManager playerManager;
     [SerializeField] MovesSystem movesSystem;
+    [SerializeField] CameraController cameraController;
 
     // Metas
     public WeaponsMeta WeaponsMeta => weaponsMeta;
 
     // Managers
-    public GameOverManager GameOverManager => gameOverManager;
-    public HUDManager HUDManager => hudManager;
     public PlayerManager PlayerManager => playerManager;
     public MovesSystem MovesSystem => movesSystem;
+    public CameraController CameraController => cameraController;
 
     // Other
     public List<BotManager> BotManagers { get; private set; }
@@ -42,11 +42,7 @@ public class GameManager : MonoBehaviour
     {
         director = Director.Instance;
 
-        Helper.Instance.PerformWithDelay(director.GameSettings.RoundStartDelay, () =>
-        {
-            if (startMatch)
-                movesSystem.StartMove();
-        });
+        if (startMatch) movesSystem.StartMove(director.GameSettings.RoundStartDelay);
     }
 
     // Добавляем бота в список ботов

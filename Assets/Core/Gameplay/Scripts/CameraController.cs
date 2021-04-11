@@ -33,7 +33,7 @@ public class CameraController : MonoBehaviour
     // Преследуем цель
     void FollowTarget()
     {
-        if (!isActive) return;
+        if (!isActive || target == null) return;
 
         newPosition = target.position;
         newPosition.y += yOffset;
