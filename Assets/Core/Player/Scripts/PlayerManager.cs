@@ -96,7 +96,7 @@ public class PlayerManager : MonoBehaviour
         if (!canMove || (isTouchingPlayer && jumpTime > 0)) return;
         if (canShoot) return;
 
-        rbody.position += moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
+        rbody.position -= moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
     }
 
 #region Handlers
