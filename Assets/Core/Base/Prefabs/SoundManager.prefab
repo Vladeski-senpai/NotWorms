@@ -94,7 +94,7 @@ MonoBehaviour:
     loop: 0
   - soundName: 12
     audioClip: {fileID: 8300000, guid: 8fb25937adc3aa14f8e29f92db505cc6, type: 3}
-    volume: 0.7
+    volume: 0.9
     minPitch: 0.95
     maxPitch: 1
     loop: 0

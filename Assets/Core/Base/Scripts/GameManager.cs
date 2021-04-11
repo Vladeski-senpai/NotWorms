@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
         director = Director.Instance;
         SoundManager.Instance.Play(SoundName.Wind);
 
+        cameraController.Init(director.GameSettings);
         movesSystem.StartMove(director.GameSettings.RoundStartDelay);
     }
 

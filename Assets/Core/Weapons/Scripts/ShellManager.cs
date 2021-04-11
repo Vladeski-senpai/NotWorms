@@ -42,6 +42,8 @@ public class ShellManager : MonoBehaviour
         isDead = true;
         triggerCollider.enabled = false;
         transform.GetChild(0).gameObject.SetActive(false);
+
+        SoundManager.Instance.Play(SoundName.Hit, true);
     }
 
     // Ќачинаем наносить переодический урон

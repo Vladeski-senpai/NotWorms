@@ -20,12 +20,14 @@ public class MovesSystem : MonoBehaviour
     float moveTime;
     bool isGameFinished;
 
+    public GameObject crash;
+
     void Start()
     {
         director = Director.Instance;
         playerManager = gameManager.PlayerManager;
-        IsPlayerTurn = true;
         moveTime = director.GameSettings.MoveTime;
+        IsPlayerTurn = true;
 
         hudManager.UpdateSideTurnText(false);
     }
@@ -34,6 +36,9 @@ public class MovesSystem : MonoBehaviour
     public void StartMove(float delay = 0)
     {
         if (isGameFinished) return;
+
+        if (preparationCO != null)
+            StopCoroutine(preparationCO);
 
         preparationCO = StartCoroutine(PreparationTimer(delay));
     }
@@ -189,6 +194,9 @@ public class MovesSystem : MonoBehaviour
         }
 
         hudManager.UpdatePreparationText(0, false);
+
+        yield return new WaitForSeconds(0.5f);
+
         Move();
     }
 }

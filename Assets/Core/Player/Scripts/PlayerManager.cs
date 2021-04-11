@@ -42,12 +42,11 @@ public class PlayerManager : MonoBehaviour
 
     Vector2 moveDirection;
     Vector2 firstTouchPos;
-    Vector2 lastTouchPos;
 
     float health;
     float jumpTime;
     float aimHoldTime;
-    float screenHalfWidth;
+    bool isTouchingPlayer;
     bool isJumpHolding;
     bool defaultCursor;
     bool onGround;
@@ -70,7 +69,6 @@ public class PlayerManager : MonoBehaviour
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
         defaultCursor = director.GameMeta.DefaultCursor;
         health = playerSettings.StartHealth;
-        screenHalfWidth = Screen.width / 2;
 
 #if UNITY_ANDROID
         isAndroid = true;
@@ -95,7 +93,7 @@ public class PlayerManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!canMove || canShoot) return;
+        if (!canMove || isTouchingPlayer || (isJumpHolding && jumpTime > 0)) return;
 
         rbody.position += moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
     }
@@ -116,24 +114,30 @@ public class PlayerManager : MonoBehaviour
                 case TouchPhase.Began:
                     firstTouchPos = touch.position;
                     TouchPosition = touch.position;
+                    isTouchingPlayer = inputHandler.CheckForPlayer(firstTouchPos);
 
-                    CheckUIHit();
+                    if (CheckUIHit()) return;
+
                     CheckJump();
                     aim.CheckMoveDirection();
 
                     //nicknameTMP.text = inputHandler.CheckForPlayer().ToString();
                     break;
 
-                case TouchPhase.Moved:
+                case TouchPhase.Stationary:
                     TouchPosition = touch.position;
+
+                    if (CheckUIHit()) return;
+
+                    aim.CheckMoveDirection();
                     break;
 
                 case TouchPhase.Ended:
-                    lastTouchPos = touch.position;
+                    TouchPosition = touch.position;
+                    isTouchingPlayer = false;
+
                     TouchPosition = Vector2.zero;
                     aim.MoveDirection = 0;
-
-                    aim.CheckMoveDirection();
 
                     if (canShoot)
                     {
@@ -170,7 +174,7 @@ public class PlayerManager : MonoBehaviour
     {
         aimHoldTime -= Time.deltaTime;
 
-        if (isJumpHolding && aimHoldTime < 0 && !canShoot)
+        if (isJumpHolding && isTouchingPlayer && aimHoldTime < 0 && !canShoot)
         {
             canShoot = true;
             crosshair.SetActive(defaultCursor);
@@ -246,6 +250,7 @@ public class PlayerManager : MonoBehaviour
         TouchPosition = Vector2.zero;
         canShoot = false;
         isJumpHolding = false;
+        isTouchingPlayer = false;
         aim.MoveDirection = 0;
 
         aim.PointsState(false);
@@ -279,12 +284,12 @@ public class PlayerManager : MonoBehaviour
     }
 
     // Проверяем нажали ли на UI элементы
-    void CheckUIHit()
+    bool CheckUIHit()
     {
         //Set up the new Pointer Event
         m_PointerEventData = new PointerEventData(m_EventSystem);
         //Set the Pointer Event Position to that of the game object
-        m_PointerEventData.position = aim.CursorPosition;
+        m_PointerEventData.position = TouchPosition;
 
         //Create a list of Raycast Results
         raycastResults = new List<RaycastResult>();
@@ -292,7 +297,15 @@ public class PlayerManager : MonoBehaviour
         //Raycast using the Graphics Raycaster and mouse click position
         m_Raycaster.Raycast(m_PointerEventData, raycastResults);
 
-        if (raycastResults.Count > 0) nicknameTMP.text = raycastResults[0].gameObject.name;
+        if (raycastResults.Count > 0)
+        {
+            //raycastResults[0].gameObject.name;
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 
     // Прыгаем

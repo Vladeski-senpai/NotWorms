@@ -13,6 +13,9 @@ public class GameSettings
     [Header("Camera settings")]
     [SerializeField] float cameraAimTime;
     [SerializeField] float yOffset;
+    [SerializeField] float zoomSpeed;
+    [SerializeField] float minZoom;
+    [SerializeField] float maxZoom;
 
     [Header("Bots settins")]
     [SerializeField] string[] botNames;
@@ -21,6 +24,9 @@ public class GameSettings
     // Camera settings
     public float CameraAimTime => cameraAimTime;
     public float YOffset => yOffset;
+    public float ZoomSpeed => zoomSpeed;
+    public float MinZoom => minZoom;
+    public float MaxZoom => maxZoom;
 
     // Game settings
     public float MoveTime => moveTime;

@@ -24,9 +24,9 @@ public class CameraController : MonoBehaviour
         Instance = this;
     }
 
-    void Start()
+    public void Init(GameSettings _gameSettings)
     {
-        gameSettings = Director.Instance.GameSettings;
+        gameSettings = _gameSettings;
     }
 
     void LateUpdate()
@@ -101,6 +101,9 @@ public class CameraController : MonoBehaviour
         float elapsedTime = 0;
 
         canMove = false;
+
+        if (gameSettings == null)
+            Debug.Log("PIIIIIIIIIIIIIIIIIIIZDAAAAAAAAAAAAA");
 
         while (elapsedTime < gameSettings.CameraAimTime)
         {
