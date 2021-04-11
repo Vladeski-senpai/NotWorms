@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         director = Director.Instance;
+        SoundManager.Instance.Play(SoundName.Wind);
 
         movesSystem.StartMove(director.GameSettings.RoundStartDelay);
     }

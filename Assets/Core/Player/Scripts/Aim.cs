@@ -15,17 +15,25 @@ public class Aim : MonoBehaviour
     public Vector3 CursorPosition => cursorPosition;
     public float LaunchSpeed => playerSettings.LaunchSpeed;
     public float ShellGravityScale => playerSettings.ShellGravityScale;
+    public int MoveDirection { get; set; }
 
     GameObject[] points;
     PlayerSettings playerSettings;
+    PlayerManager playerManager;
     Vector3 cursorPosition;
     Vector3 lookDirection;
     bool showTrajectory;
+    bool isAndroid;
 
     void Start()
     {
         playerSettings = Director.Instance.PlayerSettings;
         showTrajectory = !Director.Instance.GameMeta.DefaultCursor;
+        playerManager = GetComponent<PlayerManager>();
+
+#if UNITY_ANDROID
+        isAndroid = true;
+#endif
 
         if (!showTrajectory) return;
 
@@ -49,7 +57,7 @@ public class Aim : MonoBehaviour
     // Позиция курсора
     void GetCursorPosition()
     {
-        cursorPosition = cam.ScreenToWorldPoint(Input.mousePosition);
+        cursorPosition = cam.ScreenToWorldPoint(isAndroid ? playerManager.TouchPosition : (Vector2)Input.mousePosition);
         cursorPosition.z = 0;
     }
 
@@ -61,6 +69,11 @@ public class Aim : MonoBehaviour
 
         //crosshair.rotation = Quaternion.AngleAxis(lookAngle, Vector3.forward);
         crosshair.localPosition = Vector2.ClampMagnitude(lookDirection.normalized * 10, playerSettings.AimDistance);
+    }
+
+    public void CheckMoveDirection()
+    {
+        MoveDirection = cursorPosition.x > transform.position.x ? 1 : -1;
     }
 
     // Обновляем траекторию снаряда
@@ -77,7 +90,7 @@ public class Aim : MonoBehaviour
     // Включаем/выключаем точки в траектории
     public void PointsState(bool show)
     {
-        if (show || !showTrajectory) return;
+        if (show && !showTrajectory) return;
 
         foreach (var point in points)
             point.SetActive(show);

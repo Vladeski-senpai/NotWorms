@@ -76,6 +76,7 @@ public class BotsSettings
     [SerializeField] float moveSpeed;
     [SerializeField] float minAccuracy;
     [SerializeField] float maxAccuracy;
+    [SerializeField] float shootDelay;
     [SerializeField] float minShootDistance;
     [SerializeField] float maxShootDistance;
     [SerializeField] float shootPointDestroyDistance;
@@ -89,6 +90,7 @@ public class BotsSettings
     public float MoveSpeed => moveSpeed;
     public float MinAccuracy => minAccuracy;
     public float MaxAccuracy => maxAccuracy;
+    public float ShootDelay => shootDelay;
     public float MinShootDistance => minShootDistance;
     public float MaxShootDistance => maxShootDistance;
     public float ShootPointDestroyDistance => shootPointDestroyDistance;

@@ -7,6 +7,7 @@ public class WeaponManager : MonoBehaviour
     [Header("References")]
     [SerializeField] ShellManager shellPrefab;
 
+    SoundManager soundManager;
     GameManager gameManager;
     WeaponMeta weaponMeta;
     Aim aim;
@@ -14,7 +15,9 @@ public class WeaponManager : MonoBehaviour
     void Start()
     {
         aim = GetComponent<Aim>();
+        
         gameManager = GameManager.Instance;
+        soundManager = SoundManager.Instance;
 
         ChangeWeapon(0);
     }
@@ -30,6 +33,7 @@ public class WeaponManager : MonoBehaviour
         shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
 
         shell.Init(true, damage);
+        soundManager.Play(SoundName.Shoot, true);
     }
 
     // Стреляем
@@ -43,6 +47,7 @@ public class WeaponManager : MonoBehaviour
         shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
 
         shell.Init(weaponMeta);
+        soundManager.Play(SoundName.Shoot, true);
     }
 
     // Меняем оружие

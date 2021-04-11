@@ -13,6 +13,7 @@ public class MovesSystem : MonoBehaviour
 
     PlayerManager playerManager;
     BotManager botManager;
+    Coroutine preparationCO;
     Coroutine timerCO;
     Director director;
     float currentTime;
@@ -34,7 +35,7 @@ public class MovesSystem : MonoBehaviour
     {
         if (isGameFinished) return;
 
-        StartCoroutine(PreparationTimer(delay));
+        preparationCO = StartCoroutine(PreparationTimer(delay));
     }
 
     void Move()
@@ -147,6 +148,9 @@ public class MovesSystem : MonoBehaviour
     {
         if (timerCO != null)
             StopCoroutine(timerCO);
+
+        if (preparationCO != null)
+            StopCoroutine(preparationCO);
     }
 
     // Таймер хода

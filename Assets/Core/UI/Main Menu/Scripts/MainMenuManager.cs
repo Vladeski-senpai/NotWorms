@@ -32,6 +32,7 @@ public class MainMenuManager : MonoBehaviour
     void Start()
     {
         director = Director.Instance;
+        SoundManager.Instance.Stop(SoundName.Wind);
 
         ColorButtonsState();
         SetUpColorsDropdown();
@@ -44,6 +45,17 @@ public class MainMenuManager : MonoBehaviour
     // Настраиваем поля
     void SetUpIFs()
     {
+        if (!director.GameMeta.CustomColor)
+        {
+            foreach (var color in nicknameColors)
+                if (color.ColorID == director.GameMeta.ColorID)
+                {
+                    director.GameMeta.PlayerNameColor = color.Color;
+                    break;
+                }
+        }
+        else director.GameMeta.PlayerNameColor = new Color32(director.GameMeta.R, director.GameMeta.G, director.GameMeta.B, 255);
+
         nickNameTMP.color = director.GameMeta.PlayerNameColor;
         nickNameTMP.text = director.GameMeta.PlayerName;
 
@@ -173,6 +185,8 @@ public class MainMenuManager : MonoBehaviour
             OnCustomColorsChanged();
         else
             OnColorsDropdownChanged();
+
+        SaveSystem.Save();
     }
 
     // При нажатии на "Выбрать курсор"

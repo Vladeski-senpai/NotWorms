@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -8,15 +9,13 @@ public class ButtonAnimation : MonoBehaviour
     [SerializeField] float scaleAnimationTime;
     [SerializeField] bool checkInteractable;
 
-    Transitions transitions;
-    Coroutine interactionCO;
+    Tweener buttonTweener;
     Button button;
     Vector2 startScale;
     bool isInteractable;
 
     void Start()
     {
-        transitions = Transitions.Instance;
         startScale = rectTransform.localScale;
         isInteractable = true;
 
@@ -31,11 +30,8 @@ public class ButtonAnimation : MonoBehaviour
 
         if (!isInteractable) return;
 
-        if (interactionCO != null)
-            StopCoroutine(interactionCO);
-
-        interactionCO = StartCoroutine(transitions.ChangeScale(rectTransform,
-            startScale, startScale * scaleMultiplier, scaleAnimationTime));
+        buttonTweener.Complete();
+        buttonTweener = rectTransform.DOScale(startScale * scaleMultiplier, scaleAnimationTime);
     }
 
     // Когда отпустили кнопку
@@ -46,10 +42,7 @@ public class ButtonAnimation : MonoBehaviour
 
         if (!isInteractable) return;
 
-        if (interactionCO != null)
-            StopCoroutine(interactionCO);
-
-        interactionCO = StartCoroutine(transitions.ChangeScale(rectTransform,
-            rectTransform.localScale, startScale, scaleAnimationTime));
+        buttonTweener.Complete();
+        buttonTweener = rectTransform.DOScale(startScale, scaleAnimationTime);
     }
 }

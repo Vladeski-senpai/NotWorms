@@ -17,16 +17,8 @@ public class GameOverManager : MonoBehaviour
     [SerializeField] CanvasGroup menuCG;
     [SerializeField] RectTransform adButtonRT;
 
-    Transitions transitions;
-    Coroutine menuCO;
+    Tweener menuTweener;
     Tweener adTweener;
-    Helper helper;
-
-    void Start()
-    {
-        transitions = Transitions.Instance;
-        helper = Helper.Instance;
-    }
 
     // Включаем выключаем меню
     public void MenuState(bool show)
@@ -35,24 +27,12 @@ public class GameOverManager : MonoBehaviour
         menuCG.blocksRaycasts = show;
 
         if (show)
-        {
-            helper.PerformWithDelay(adBtnShakeDelay, () =>
-            {
-                adTweener = adButtonRT.DOShakeAnchorPos(adBtnShakeDuration, adBtnShakeVector, adBtnShakeVibrato, adBtnShakeRandomness);
-            });
-        }
+            adTweener = adButtonRT.DOShakeAnchorPos(adBtnShakeDuration, adBtnShakeVector, adBtnShakeVibrato, adBtnShakeRandomness).SetDelay(adBtnShakeDelay);
         else
-        {
             adTweener.Complete();
-        }
 
-        if (menuCO != null)
-            StopCoroutine(menuCO);
-
-        helper.PerformWithDelay(show ? menuFadeInDelay : 0, () =>
-        {
-            menuCO = StartCoroutine(transitions.Fade(menuCG, menuFadeTime, show));
-        });
+        menuTweener.Complete();
+        menuTweener = menuCG.DOFade(show ? 1 : 0, menuFadeTime).SetDelay(show ? menuFadeInDelay : 0);
     }
 
     // При нажатии на "Главное меню"

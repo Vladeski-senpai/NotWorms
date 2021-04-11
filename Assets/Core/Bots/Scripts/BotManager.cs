@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -21,14 +22,12 @@ public class BotManager : MonoBehaviour
     GameManager gameManager;
     Transform shootPoint;
     Transform player;
-    Helper helper;
     float health;
     bool canMove;
 
     void Start()
     {
         gameManager = GameManager.Instance;
-        helper = Helper.Instance;
         botsSettings = Director.Instance.BotsSettings;
         cameraController = gameManager.CameraController;
         playerManager = gameManager.PlayerManager;
@@ -53,23 +52,21 @@ public class BotManager : MonoBehaviour
 
     void Shoot()
     {
-        helper.PerformWithDelay(1, () =>
-        {
-            var shell = Instantiate(shellPrefab);
-            shell.Init(false, botsSettings.Damage);
-            shell.transform.position = aimPoint.position;
+        // accuracy = 3.3f - 100% hit accuracy
+        float accuracy = Random.Range(botsSettings.MinAccuracy, botsSettings.MaxAccuracy);
 
-            // accuracy = 3.3f - 100% hit accuracy
-            float accuracy = Random.Range(botsSettings.MinAccuracy, botsSettings.MaxAccuracy); 
+        bool canShoot = BotAim.solve_ballistic_arc_lateral(aimPoint.position, player.position, accuracy,
+            Random.Range(botsSettings.MinShootHeight, botsSettings.MaxShootHeight), out Vector3 s0, out float s1);
 
-            bool canShoot = BotAim.solve_ballistic_arc_lateral(aimPoint.position, player.position, accuracy,
-                Random.Range(botsSettings.MinShootHeight, botsSettings.MaxShootHeight), out Vector3 s0, out float s1);
+        if (!canShoot) return;
 
-            if (!canShoot) return;
+        var shell = Instantiate(shellPrefab);
+        shell.Init(false, botsSettings.Damage);
+        shell.transform.position = aimPoint.position;
+        shell.RBody.gravityScale = s1;
+        shell.RBody.AddForce(s0 * accuracy, ForceMode2D.Impulse);
 
-            shell.RBody.gravityScale = s1;
-            shell.RBody.AddForce(s0 * accuracy, ForceMode2D.Impulse);
-        });        
+        SoundManager.Instance.Play(SoundName.Shoot, true);
     }
 
     // Наносим урон боту
@@ -135,6 +132,13 @@ public class BotManager : MonoBehaviour
         Destroy(gameObject);
     }
 
+    IEnumerator PrepareShooting()
+    {
+        yield return new WaitForSeconds(botsSettings.ShootDelay);
+
+        Shoot();
+    }
+
     void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("point"))
@@ -142,9 +146,9 @@ public class BotManager : MonoBehaviour
             Destroy(shootPoint.gameObject);
             shootPoint = null;
 
-            Shoot();
             canMove = false;
             gameManager.MovesSystem.StopTimer();
+            StartCoroutine(PrepareShooting());
         }
     }
 }

@@ -49,11 +49,7 @@ public class ShellManager : MonoBehaviour
     {
         damageCO = StartCoroutine(PeriodicDamage());
 
-        Helper.Instance.PerformWithDelay(weaponMeta.FireDuration, () =>
-        {
-            if (damageCO != null)
-                StopCoroutine(damageCO);
-        });
+        StartCoroutine(PeriodicDamageTimer());
     }
 
     // Наносим переодический урон
@@ -65,6 +61,15 @@ public class ShellManager : MonoBehaviour
 
             yield return new WaitForSeconds(weaponMeta.DamageInterval);
         }
+    }
+
+    // Таймер переодического урона
+    IEnumerator PeriodicDamageTimer()
+    {
+        yield return new WaitForSeconds(weaponMeta.FireDuration);
+
+        if (damageCO != null)
+            StopCoroutine(damageCO);
     }
 
     void OnCollisionEnter2D(Collision2D collision)

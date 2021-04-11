@@ -14,7 +14,7 @@ public class InputHandler : MonoBehaviour
     public bool CheckForPlayer()
     {
         bool wasFound = false;
-        hitsInfo = Physics2D.RaycastAll(Camera.main.ScreenToWorldPoint(aim.CursorPosition), Vector2.zero);
+        hitsInfo = Physics2D.RaycastAll(aim.CursorPosition, Vector2.zero);
 
         if (hitsInfo != null)
             foreach (RaycastHit2D hit in hitsInfo)
