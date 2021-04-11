@@ -73,13 +73,13 @@ MonoBehaviour:
     startHealth: 100
     moveSpeed: 8
     jumpStrength: 40
-    jumpTimer: 0.2
+    jumpTimer: 0.3
     aimHoldTimer: 2
     aimDistance: 3.5
     launchSpeed: 12
     shellGravityScale: 1
     trajectoryTimeMultilpier: 0.1
-    pointsCount: 20
+    pointsCount: 14
     trajectoryColor: {r: 1, g: 0.6904891, b: 0.25943398, a: 1}
   botsSettings:
     startHealth: 100

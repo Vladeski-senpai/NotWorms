@@ -13,6 +13,7 @@ public class Aim : MonoBehaviour
     // Other
     public Transform SpawnPoint => spawnPoint;
     public Vector3 CursorPosition => cursorPosition;
+    public Vector3 LookDirection => lookDirection;
     public float LaunchSpeed => playerSettings.LaunchSpeed;
     public float ShellGravityScale => playerSettings.ShellGravityScale;
     public int MoveDirection { get; set; }
@@ -64,7 +65,7 @@ public class Aim : MonoBehaviour
     // Двигаем прицел
     void MoveCrosshair()
     {
-        lookDirection = cursorPosition - transform.position;
+        lookDirection = transform.position - cursorPosition;
         //lookAngle = Mathf.Atan2(lookDirection.y, lookDirection.x) * Mathf.Rad2Deg;
 
         //crosshair.rotation = Quaternion.AngleAxis(lookAngle, Vector3.forward);
@@ -73,7 +74,10 @@ public class Aim : MonoBehaviour
 
     public void CheckMoveDirection()
     {
-        MoveDirection = cursorPosition.x > transform.position.x ? 1 : -1;
+        if (Mathf.Abs(lookDirection.x) > 0.1f)
+            MoveDirection = cursorPosition.x > transform.position.x ? 1 : -1;
+        else
+            MoveDirection = 0;
     }
 
     // Обновляем траекторию снаряда
@@ -81,7 +85,7 @@ public class Aim : MonoBehaviour
     {
         if (!showTrajectory) return;
 
-        Vector2 lookDirection = (cursorPosition - transform.position).normalized;
+        Vector2 lookDirection = (transform.position - cursorPosition).normalized;
 
         for (int i = 0; i < playerSettings.PointsCount; i++)
             points[i].transform.position = PointPosition(lookDirection, i * playerSettings.TrajectoryTimeMultilpier);

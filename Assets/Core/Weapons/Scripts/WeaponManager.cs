@@ -22,29 +22,14 @@ public class WeaponManager : MonoBehaviour
         ChangeWeapon(0);
     }
 
-    // Создаём снаряд и выстреливаем
-    public void Shoot(float damage)
-    {
-        ShellManager shell = Instantiate(shellPrefab);
-        Vector2 lookDirection = (aim.CursorPosition - transform.position).normalized;
-
-        shell.transform.position = aim.SpawnPoint.position;
-        shell.RBody.gravityScale = aim.ShellGravityScale;
-        shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
-
-        shell.Init(true, damage);
-        soundManager.Play(SoundName.Shoot, true);
-    }
-
     // Стреляем
     public void Shoot()
     {
         ShellManager shell = Instantiate(shellPrefab);
-        Vector2 lookDirection = (aim.CursorPosition - transform.position).normalized;
 
         shell.transform.position = aim.SpawnPoint.position;
         shell.RBody.gravityScale = aim.ShellGravityScale;
-        shell.RBody.velocity = lookDirection * aim.LaunchSpeed;
+        shell.RBody.velocity = aim.LookDirection * aim.LaunchSpeed;
 
         shell.Init(weaponMeta);
         soundManager.Play(SoundName.Shoot, true);

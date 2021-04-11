@@ -32,7 +32,6 @@ public class PlayerManager : MonoBehaviour
 
     List<RaycastResult> raycastResults;
     PointerEventData m_PointerEventData;
-    CameraController cameraController;
     WeaponManager weaponManager;
     PlayerSettings playerSettings;
     InputHandler inputHandler;
@@ -64,7 +63,6 @@ public class PlayerManager : MonoBehaviour
         gameManager = GameManager.Instance;
         director = Director.Instance;
         playerSettings = director.PlayerSettings;
-        cameraController = gameManager.CameraController;
         nicknameTMP.text = director.GameMeta.PlayerName;
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
         defaultCursor = director.GameMeta.DefaultCursor;
@@ -78,6 +76,8 @@ public class PlayerManager : MonoBehaviour
     void Update()
     {
         if (!canMove) return;
+
+        onGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLM);
 
         if (!isAndroid)
         {
@@ -93,7 +93,9 @@ public class PlayerManager : MonoBehaviour
 
     void FixedUpdate()
     {
-        if (!canMove || isTouchingPlayer || (isJumpHolding && jumpTime > 0)) return;
+        if (!canMove) return;
+        if (isTouchingPlayer && jumpTime > 0) return;
+        if (canShoot) return;
 
         rbody.position += moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
     }
@@ -120,8 +122,6 @@ public class PlayerManager : MonoBehaviour
 
                     CheckJump();
                     aim.CheckMoveDirection();
-
-                    //nicknameTMP.text = inputHandler.CheckForPlayer().ToString();
                     break;
 
                 case TouchPhase.Stationary:
@@ -178,7 +178,8 @@ public class PlayerManager : MonoBehaviour
         {
             canShoot = true;
             crosshair.SetActive(defaultCursor);
-            aim.PointsState(true);
+
+            if (!defaultCursor) aim.PointsState(true);
         }
 
         if (!isAndroid && Input.GetKeyUp(KeyCode.Space)) isJumpHolding = false;
@@ -230,7 +231,6 @@ public class PlayerManager : MonoBehaviour
 
         health = finalHealth;
         healthSlider.fillAmount = health / playerSettings.StartHealth;
-        cameraController.Shake(0);
     }
 
     // Воскрешаем игрока
@@ -253,8 +253,10 @@ public class PlayerManager : MonoBehaviour
         isTouchingPlayer = false;
         aim.MoveDirection = 0;
 
-        aim.PointsState(false);
-        crosshair.SetActive(false);
+        if (!defaultCursor)
+            aim.PointsState(false);
+        else
+            crosshair.SetActive(false);
     }
 
     #endregion
@@ -264,13 +266,14 @@ public class PlayerManager : MonoBehaviour
     // Проверяем можем ли прыгнуть
     void CheckJump()
     {
-        onGround = Physics2D.OverlapCircle(groundCheck.position, checkRadius, groundLM);
         jumpTime = playerSettings.JumpTimer;
         aimHoldTime = playerSettings.AimHoldTimer;
         isJumpHolding = true;
         canShoot = false;
+
         crosshair.SetActive(false);
-        aim.PointsState(false);
+
+        if (!defaultCursor) aim.PointsState(false);
 
         if (onGround)
         {
@@ -311,6 +314,7 @@ public class PlayerManager : MonoBehaviour
     // Прыгаем
     void DoJump()
     {
+        jumpTime = -1;
         rbody.AddForce(Vector2.up * playerSettings.JumpStrength, ForceMode2D.Impulse);
     }
 

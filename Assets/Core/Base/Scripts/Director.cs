@@ -28,6 +28,8 @@ public class Director : MonoBehaviour
 
             DontDestroyOnLoad(this);
             LoadData();
+
+            Application.targetFrameRate = 60;
         }
         else Destroy(gameObject);
     }

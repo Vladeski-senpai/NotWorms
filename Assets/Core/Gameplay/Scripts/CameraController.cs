@@ -102,9 +102,6 @@ public class CameraController : MonoBehaviour
 
         canMove = false;
 
-        if (gameSettings == null)
-            Debug.Log("PIIIIIIIIIIIIIIIIIIIZDAAAAAAAAAAAAA");
-
         while (elapsedTime < gameSettings.CameraAimTime)
         {
             elapsedTime += Time.deltaTime;

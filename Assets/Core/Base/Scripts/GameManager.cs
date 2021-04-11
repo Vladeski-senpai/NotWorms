@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
     // Managers
     public PlayerManager PlayerManager => playerManager;
     public MovesSystem MovesSystem => movesSystem;
-    public CameraController CameraController => cameraController;
 
     // Other
     public List<BotManager> BotManagers { get; private set; }
@@ -40,8 +39,16 @@ public class GameManager : MonoBehaviour
         director = Director.Instance;
         SoundManager.Instance.Play(SoundName.Wind);
 
-        cameraController.Init(director.GameSettings);
+        InitializeManagers();
+
         movesSystem.StartMove(director.GameSettings.RoundStartDelay);
+    }
+
+    void InitializeManagers()
+    {
+        hudManager.Init();
+        cameraController.Init(director.GameSettings);
+        movesSystem.Init();
     }
 
     // Добавляем бота в список ботов

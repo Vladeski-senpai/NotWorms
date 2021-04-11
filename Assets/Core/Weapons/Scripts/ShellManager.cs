@@ -44,6 +44,7 @@ public class ShellManager : MonoBehaviour
         transform.GetChild(0).gameObject.SetActive(false);
 
         SoundManager.Instance.Play(SoundName.Hit, true);
+        CameraController.Instance.Shake(0);
     }
 
     // Ќачинаем наносить переодический урон

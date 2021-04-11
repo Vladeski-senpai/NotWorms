@@ -16,7 +16,6 @@ public class BotManager : MonoBehaviour
     public int TurnsSkip { get; set; }
     public bool MoveWasMade { get; set; }
 
-    CameraController cameraController;
     PlayerManager playerManager;
     BotsSettings botsSettings;
     GameManager gameManager;
@@ -29,7 +28,6 @@ public class BotManager : MonoBehaviour
     {
         gameManager = GameManager.Instance;
         botsSettings = Director.Instance.BotsSettings;
-        cameraController = gameManager.CameraController;
         playerManager = gameManager.PlayerManager;
         player = playerManager.transform;
         health = botsSettings.StartHealth;
@@ -83,9 +81,6 @@ public class BotManager : MonoBehaviour
 
         health = finalHealth;
         healthSlider.fillAmount = health / botsSettings.StartHealth;
-
-        // Трясём камеру
-        if (shake) cameraController.Shake(0);
     }
 
     // Может ли игрок ходить

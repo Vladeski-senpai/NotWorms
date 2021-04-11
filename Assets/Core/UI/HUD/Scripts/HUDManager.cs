@@ -21,7 +21,7 @@ public class HUDManager : MonoBehaviour
 
     WeaponSlot currentWeapon;
 
-    void Start()
+    public void Init()
     {
         currentWeapon = weaponSlots[0];
         weaponSlots[0].Select(true, scaleMultiplier, 0, defaultWeaponSlotColor);

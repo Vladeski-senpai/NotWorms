@@ -8006,14 +8006,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6474924906909033913, guid: c1354264e31c90b4f9e748fa05c23241, type: 3}
-      propertyPath: gameSettings.roundStartDelay
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 6474924906909033913, guid: c1354264e31c90b4f9e748fa05c23241, type: 3}
-      propertyPath: gameSettings.turnSwitchDelay
-      value: 0
-      objectReference: {fileID: 0}
     - target: {fileID: 6474924906909033915, guid: c1354264e31c90b4f9e748fa05c23241, type: 3}
       propertyPath: m_Name
       value: Director

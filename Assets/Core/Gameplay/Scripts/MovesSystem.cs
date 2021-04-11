@@ -20,9 +20,7 @@ public class MovesSystem : MonoBehaviour
     float moveTime;
     bool isGameFinished;
 
-    public GameObject crash;
-
-    void Start()
+    public void Init()
     {
         director = Director.Instance;
         playerManager = gameManager.PlayerManager;
@@ -176,8 +174,8 @@ public class MovesSystem : MonoBehaviour
 
         currentTime = 0;
 
-        StopMove();
         hudManager.UpdateTimer(0);
+        StopMove();
     }
 
     // Подготовка перед ходом
