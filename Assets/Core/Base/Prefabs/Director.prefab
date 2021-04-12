@@ -51,7 +51,7 @@ MonoBehaviour:
     cameraAimTime: 0.5
     yOffset: 5
     zoomSpeed: 5
-    minZoom: 2
+    minZoom: 6
     maxZoom: 32
     botNames:
     - Antony
@@ -75,18 +75,18 @@ MonoBehaviour:
     jumpStrength: 40
     jumpTimer: 0.3
     aimHoldTimer: 2
-    aimDistance: 3.5
+    aimDistance: 3.65
     launchSpeed: 12
     shellGravityScale: 1
     trajectoryTimeMultilpier: 0.1
-    pointsCount: 14
+    pointsCount: 18
     trajectoryColor: {r: 1, g: 0.6904891, b: 0.25943398, a: 1}
   botsSettings:
     startHealth: 100
-    damage: 15
-    moveSpeed: 3
-    minAccuracy: 3.25
-    maxAccuracy: 3.3
+    damage: 20
+    moveSpeed: 4
+    minAccuracy: 2.6
+    maxAccuracy: 3.6
     shootDelay: 1
     minShootDistance: 4
     maxShootDistance: 13

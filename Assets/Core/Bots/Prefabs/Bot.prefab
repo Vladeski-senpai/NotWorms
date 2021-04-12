@@ -440,19 +440,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bdd0eab7bc979a149ab01f4948917036, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startHealth: 100
-  moveSpeed: 3.5
-  damage: 15
-  minShootDistance: 4
-  maxShootDistance: 15
-  minShootHeight: 2
-  maxShootHeight: 7
   nicknameTMP: {fileID: 3900578942372494268}
   healthSlider: {fileID: 3900578942243523121}
   aimPoint: {fileID: 3900578942990774989}
   rbody: {fileID: 3900578942765896130}
   shootPointPrefab: {fileID: 388368922819798184, guid: 2a1aaa902aba94a498a9563606f5ed29, type: 3}
   shellPrefab: {fileID: 3136730079504917958, guid: 0622ab98c8832f142bc5905c53651eec, type: 3}
+  deathPSPrefab: {fileID: 7558479151783341600, guid: 984d8ddd59a91ca4d860d6c788b8e8a2, type: 3}
 --- !u!50 &3900578942765896130
 Rigidbody2D:
   serializedVersion: 4

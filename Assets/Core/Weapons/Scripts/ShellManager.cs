@@ -7,6 +7,7 @@ public class ShellManager : MonoBehaviour
     [Header("References")]
     [SerializeField] Rigidbody2D rbody;
     [SerializeField] CircleCollider2D triggerCollider;
+    [SerializeField] ParticleSystem deathPSPrefab;
 
     public Rigidbody2D RBody => rbody;
 
@@ -42,6 +43,10 @@ public class ShellManager : MonoBehaviour
         isDead = true;
         triggerCollider.enabled = false;
         transform.GetChild(0).gameObject.SetActive(false);
+
+        var deathPS = Instantiate(deathPSPrefab);
+        deathPS.transform.position = transform.position;
+        Destroy(deathPS.gameObject, 60);
 
         SoundManager.Instance.Play(SoundName.Hit, true);
         CameraController.Instance.Shake(0);

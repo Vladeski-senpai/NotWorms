@@ -29,7 +29,7 @@ public class WeaponManager : MonoBehaviour
 
         shell.transform.position = aim.SpawnPoint.position;
         shell.RBody.gravityScale = aim.ShellGravityScale;
-        shell.RBody.velocity = aim.LookDirection * aim.LaunchSpeed;
+        shell.RBody.velocity = aim.LookDirection.normalized * aim.LaunchSpeed;
 
         shell.Init(weaponMeta);
         soundManager.Play(SoundName.Shoot, true);

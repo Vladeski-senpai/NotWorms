@@ -20,6 +20,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] RectTransform canvasRect;
     [SerializeField] GraphicRaycaster m_Raycaster;
     [SerializeField] EventSystem m_EventSystem;
+    [SerializeField] ParticleSystem deathPSPrefab;
 
     [Header("Other")]
     [SerializeField] Color groundCheckColor;
@@ -48,6 +49,7 @@ public class PlayerManager : MonoBehaviour
     bool isTouchingPlayer;
     bool isJumpHolding;
     bool defaultCursor;
+    bool blockMovement;
     bool onGround;
     bool canShoot;
     bool canJump;
@@ -67,6 +69,7 @@ public class PlayerManager : MonoBehaviour
         nicknameTMP.color = director.GameMeta.PlayerNameColor;
         defaultCursor = director.GameMeta.DefaultCursor;
         health = playerSettings.StartHealth;
+        blockMovement = true;
 
 #if UNITY_ANDROID
         isAndroid = true;
@@ -87,16 +90,15 @@ public class PlayerManager : MonoBehaviour
         else TouchesHandler();
 
         AimHandler();
-        MovementHandler();
         ShootingHandler();
+        MovementHandler();
     }
 
     void FixedUpdate()
     {
-        if (!canMove || (isTouchingPlayer && jumpTime > 0)) return;
-        if (canShoot) return;
+        if (!canMove || blockMovement) return;
 
-        rbody.position -= moveDirection.normalized * playerSettings.MoveSpeed * Time.fixedDeltaTime;
+        rbody.position += moveDirection * playerSettings.MoveSpeed * Time.fixedDeltaTime;
     }
 
 #region Handlers
@@ -119,10 +121,13 @@ public class PlayerManager : MonoBehaviour
 
                     if (CheckUIHit()) return;
 
+                    blockMovement = isTouchingPlayer;
+
                     CheckJump();
                     aim.CheckMoveDirection();
                     break;
 
+                case TouchPhase.Moved:
                 case TouchPhase.Stationary:
                     TouchPosition = touch.position;
 
@@ -163,7 +168,12 @@ public class PlayerManager : MonoBehaviour
         jumpTime -= Time.deltaTime;
 
         // Если истекло время для второго прыжка
-        if (canJump && jumpTime < 0) canJump = false;
+        if (canJump && jumpTime < 0)
+        {
+            canJump = false;
+
+            if (!isTouchingPlayer) blockMovement = false;
+        }
 
         if (!isAndroid && Input.GetKeyDown(KeyCode.Space)) CheckJump();  // Прыжок
     }
@@ -176,6 +186,7 @@ public class PlayerManager : MonoBehaviour
         if (isJumpHolding && isTouchingPlayer && aimHoldTime < 0 && !canShoot)
         {
             canShoot = true;
+            blockMovement = true;
             crosshair.SetActive(defaultCursor);
 
             if (!defaultCursor) aim.PointsState(true);
@@ -194,6 +205,7 @@ public class PlayerManager : MonoBehaviour
             if (!isAndroid && Input.GetMouseButtonDown(0))
             {
                 weaponManager.Shoot();
+                gameManager.HUDManager.WeaponSlotButtonsState(false);
                 gameManager.MovesSystem.StopTimer();
                 TurnState(false);
             }
@@ -279,9 +291,13 @@ public class PlayerManager : MonoBehaviour
             if (canJump)
             {
                 canJump = false;
+
                 DoJump();
             }
-            else canJump = true;
+            else
+            {
+                canJump = true;
+            }
         }
     }
 
@@ -313,7 +329,6 @@ public class PlayerManager : MonoBehaviour
     // Прыгаем
     void DoJump()
     {
-        jumpTime = -1;
         rbody.AddForce(Vector2.up * playerSettings.JumpStrength, ForceMode2D.Impulse);
     }
 
@@ -324,6 +339,10 @@ public class PlayerManager : MonoBehaviour
 
         gameManager.GameOver();
         gameObject.SetActive(false);
+
+        var deathPS = Instantiate(deathPSPrefab);
+        deathPS.transform.position = transform.position;
+        Destroy(deathPS.gameObject, 60);
     }
 
     /*void OnDrawGizmos()

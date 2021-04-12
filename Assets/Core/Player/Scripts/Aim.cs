@@ -75,7 +75,7 @@ public class Aim : MonoBehaviour
     public void CheckMoveDirection()
     {
         if (Mathf.Abs(lookDirection.x) > 0.1f)
-            MoveDirection = cursorPosition.x > transform.position.x ? 1 : -1;
+            MoveDirection = lookDirection.x > transform.position.x ? 1 : -1;
         else
             MoveDirection = 0;
     }

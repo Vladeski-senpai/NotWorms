@@ -12,6 +12,7 @@ public class BotManager : MonoBehaviour
     [SerializeField] Rigidbody2D rbody;
     [SerializeField] ShootPoint shootPointPrefab;
     [SerializeField] ShellManager shellPrefab;
+    [SerializeField] ParticleSystem deathPSPrefab;
 
     public int TurnsSkip { get; set; }
     public bool MoveWasMade { get; set; }
@@ -122,6 +123,10 @@ public class BotManager : MonoBehaviour
     // Убиваем бота
     void Die()
     {
+        var deathPS = Instantiate(deathPSPrefab);
+        deathPS.transform.position = transform.position;
+        Destroy(deathPS.gameObject, 60);
+
         gameManager.OnMoveEnded();
         gameManager.DeleteBot(this);
         Destroy(gameObject);
@@ -138,7 +143,8 @@ public class BotManager : MonoBehaviour
     {
         if (collision.CompareTag("point"))
         {
-            Destroy(shootPoint.gameObject);
+            if (shootPoint != null) Destroy(shootPoint.gameObject);
+
             shootPoint = null;
 
             canMove = false;

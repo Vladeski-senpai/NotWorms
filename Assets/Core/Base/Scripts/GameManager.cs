@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public WeaponsMeta WeaponsMeta => weaponsMeta;
 
     // Managers
+    public HUDManager HUDManager => hudManager;
     public PlayerManager PlayerManager => playerManager;
     public MovesSystem MovesSystem => movesSystem;
 
