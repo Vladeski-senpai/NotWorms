@@ -16,9 +16,19 @@ public class GameOverManager : MonoBehaviour
     [Header("References")]
     [SerializeField] CanvasGroup menuCG;
     [SerializeField] RectTransform adButtonRT;
+    [SerializeField] GameObject lostTitle;
+    [SerializeField] GameObject wonTitle;
+    [SerializeField] GameObject adButton;
 
     Tweener menuTweener;
     Tweener adTweener;
+
+    public void GameResult(bool lost)
+    {
+        lostTitle.SetActive(lost);
+        wonTitle.SetActive(!lost);
+        adButton.SetActive(lost);
+    }
 
     // ¬ключаем выключаем меню
     public void MenuState(bool show)

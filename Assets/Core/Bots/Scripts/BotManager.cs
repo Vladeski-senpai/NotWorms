@@ -12,9 +12,11 @@ public class BotManager : MonoBehaviour
     [SerializeField] Rigidbody2D rbody;
     [SerializeField] ShootPoint shootPointPrefab;
     [SerializeField] ShellManager shellPrefab;
+    [SerializeField] GameObject frozenEffect;
     [SerializeField] ParticleSystem deathPSPrefab;
+    [SerializeField] ParticleSystem hitPSPrefab;
 
-    public int TurnsSkip { get; set; }
+    public int TurnsSkip { get; private set; }
     public bool MoveWasMade { get; set; }
 
     PlayerManager playerManager;
@@ -23,6 +25,7 @@ public class BotManager : MonoBehaviour
     Transform shootPoint;
     Transform player;
     float health;
+    bool hasShooted;
     bool canMove;
 
     void Start()
@@ -35,6 +38,10 @@ public class BotManager : MonoBehaviour
 
         SetNickname();
         gameManager.RegisterBot(this);
+
+        Vector2 newPos = transform.position;
+        newPos.x = Random.Range(-48, 48);
+        transform.position = newPos;
     }
 
     void Update()
@@ -69,7 +76,7 @@ public class BotManager : MonoBehaviour
     }
 
     // Наносим урон боту
-    public void DoDamage(float amount, bool shake = false)
+    public void DoDamage(float amount, bool hitFlash = true)
     {
         float finalHealth = health - amount;
 
@@ -79,25 +86,32 @@ public class BotManager : MonoBehaviour
 
             Die();
         }
+        else if (hitFlash)
+        {
+            var hitPs = Instantiate(hitPSPrefab);
+            Vector2 newPos = transform.position;
+            newPos.y += 1.2f;
+            hitPs.transform.position = newPos;
+            Destroy(hitPs.gameObject, 20);
+        }
 
         health = finalHealth;
         healthSlider.fillAmount = health / botsSettings.StartHealth;
+
+        if (hitFlash) gameManager.HUDManager.TriggerHitFlash();
     }
 
     // Может ли игрок ходить
-    public bool TurnState(bool _canMove)
+    public void TurnState(bool _canMove)
     {
-        if (TurnsSkip > 0)
-        {
-            TurnsSkip--;
-            return false;
-        }
-        else canMove = _canMove;
+        canMove = _canMove;
 
         if (canMove)
         {
             if (shootPoint == null || Vector2.Distance(transform.position, player.position) > botsSettings.ShootPointDestroyDistance)
             {
+                hasShooted = false;
+
                 if (shootPoint != null)
                     Destroy(shootPoint.gameObject);
 
@@ -108,8 +122,13 @@ public class BotManager : MonoBehaviour
                 shootPoint = point.transform;
             }
         }
+    }
 
-        return true;
+    // "Замораживаем" на несколько ходов
+    public void FreezeState(int moves)
+    {
+        TurnsSkip += moves;
+        frozenEffect.SetActive(TurnsSkip > 0);
     }
 
     // Устанавливаем случайный ник
@@ -141,15 +160,20 @@ public class BotManager : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
+        if (hasShooted || TurnsSkip > 0) return;
+
         if (collision.CompareTag("point"))
         {
-            if (shootPoint != null) Destroy(shootPoint.gameObject);
+            if (collision.transform == shootPoint)
+            {
+                if (shootPoint != null) Destroy(shootPoint.gameObject);
 
-            shootPoint = null;
-
-            canMove = false;
-            gameManager.MovesSystem.StopTimer();
-            StartCoroutine(PrepareShooting());
+                shootPoint = null;
+                hasShooted = true;
+                canMove = false;
+                gameManager.MovesSystem.StopTimer();
+                StartCoroutine(PrepareShooting());
+            }
         }
     }
 }

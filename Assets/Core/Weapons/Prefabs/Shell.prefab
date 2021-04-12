@@ -49,6 +49,7 @@ MonoBehaviour:
   rbody: {fileID: 3433274388184279659}
   triggerCollider: {fileID: 3433274388184279658}
   deathPSPrefab: {fileID: 2537629006428881483, guid: 1a70b1dc64031eb4eb12e7a281b32635, type: 3}
+  firePSPrefab: {fileID: 4965413434727253582, guid: 451ca90432094e14586086486850d24d, type: 3}
 --- !u!50 &3433274388184279659
 Rigidbody2D:
   serializedVersion: 4

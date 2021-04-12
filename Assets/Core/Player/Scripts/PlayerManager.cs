@@ -21,6 +21,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] GraphicRaycaster m_Raycaster;
     [SerializeField] EventSystem m_EventSystem;
     [SerializeField] ParticleSystem deathPSPrefab;
+    [SerializeField] ParticleSystem hitPSPrefab;
 
     [Header("Other")]
     [SerializeField] Color groundCheckColor;
@@ -124,7 +125,7 @@ public class PlayerManager : MonoBehaviour
                     blockMovement = isTouchingPlayer;
 
                     CheckJump();
-                    aim.CheckMoveDirection();
+                    //aim.CheckMoveDirection();
                     break;
 
                 case TouchPhase.Moved:
@@ -139,8 +140,6 @@ public class PlayerManager : MonoBehaviour
                 case TouchPhase.Ended:
                     TouchPosition = touch.position;
                     isTouchingPlayer = false;
-
-                    TouchPosition = Vector2.zero;
                     aim.MoveDirection = 0;
 
                     if (canShoot)
@@ -239,9 +238,18 @@ public class PlayerManager : MonoBehaviour
 
             Die();
         }
+        else
+        {
+            var hitPs = Instantiate(hitPSPrefab);
+            Vector2 newPos = transform.position;
+            newPos.y += 1.2f;
+            hitPs.transform.position = newPos;
+            Destroy(hitPs.gameObject, 20);
+        }
 
         health = finalHealth;
         healthSlider.fillAmount = health / playerSettings.StartHealth;
+        gameManager.HUDManager.TriggerHitFlash();
     }
 
     // Воскрешаем игрока
@@ -258,7 +266,6 @@ public class PlayerManager : MonoBehaviour
     {
         canMove = _canMove;
         moveDirection = Vector2.zero;
-        TouchPosition = Vector2.zero;
         canShoot = false;
         isJumpHolding = false;
         isTouchingPlayer = false;

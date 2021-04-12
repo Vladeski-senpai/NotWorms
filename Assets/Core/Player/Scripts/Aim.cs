@@ -51,14 +51,14 @@ public class Aim : MonoBehaviour
 
     void Update()
     {
-        GetCursorPosition();
+        //GetCursorPosition();
         MoveCrosshair();
     }
 
     // Позиция курсора
     void GetCursorPosition()
     {
-        cursorPosition = cam.ScreenToWorldPoint(isAndroid ? playerManager.TouchPosition : (Vector2)Input.mousePosition);
+        cursorPosition = cam.ScreenToWorldPoint(playerManager.TouchPosition);
         cursorPosition.z = 0;
     }
 
@@ -74,8 +74,10 @@ public class Aim : MonoBehaviour
 
     public void CheckMoveDirection()
     {
+        GetCursorPosition();
+
         if (Mathf.Abs(lookDirection.x) > 0.1f)
-            MoveDirection = lookDirection.x > transform.position.x ? 1 : -1;
+            MoveDirection = cursorPosition.x > transform.position.x ? 1 : -1;
         else
             MoveDirection = 0;
     }

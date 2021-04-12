@@ -18,6 +18,7 @@ public class GameManager : MonoBehaviour
     public WeaponsMeta WeaponsMeta => weaponsMeta;
 
     // Managers
+    public GameOverManager GameOverManager => gameOverManager;
     public HUDManager HUDManager => hudManager;
     public PlayerManager PlayerManager => playerManager;
     public MovesSystem MovesSystem => movesSystem;
@@ -74,6 +75,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         movesSystem.FinishGame();
+        gameOverManager.GameResult(true);
         gameOverManager.MenuState(true);
     }
 

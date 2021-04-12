@@ -46,8 +46,8 @@ MonoBehaviour:
   gameSettings:
     moveTime: 15
     nickNameMaxLength: 13
-    roundStartDelay: 5.49
-    turnSwitchDelay: 3.49
+    roundStartDelay: 5.2
+    turnSwitchDelay: 3.2
     cameraAimTime: 0.5
     yOffset: 5
     zoomSpeed: 5
@@ -55,10 +55,10 @@ MonoBehaviour:
     maxZoom: 32
     botNames:
     - Antony
-    - John
+    - John Wick
     - Stan
     - Kyle
-    - Max
+    - Batya
     - Jesus
     - Vlad
     - Snowflake
@@ -79,17 +79,17 @@ MonoBehaviour:
     launchSpeed: 12
     shellGravityScale: 1
     trajectoryTimeMultilpier: 0.1
-    pointsCount: 18
+    pointsCount: 20
     trajectoryColor: {r: 1, g: 0.6904891, b: 0.25943398, a: 1}
   botsSettings:
     startHealth: 100
-    damage: 20
+    damage: 10
     moveSpeed: 4
     minAccuracy: 2.6
-    maxAccuracy: 3.6
+    maxAccuracy: 3.7
     shootDelay: 1
-    minShootDistance: 4
-    maxShootDistance: 13
+    minShootDistance: 5
+    maxShootDistance: 17
     shootPointDestroyDistance: 22
     minShootHeight: 1
     maxShootHeight: 7

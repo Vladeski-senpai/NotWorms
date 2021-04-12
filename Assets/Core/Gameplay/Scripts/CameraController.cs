@@ -63,8 +63,10 @@ public class CameraController : MonoBehaviour
     }
 
     // Трясём камеру
-    public void Shake(int shakeIndex)
+    public void Shake()
     {
+        int shakeIndex = Random.Range(0, shakeSettings.Length);
+
         if (shakeCO != null)
             StopCoroutine(shakeCO);
 

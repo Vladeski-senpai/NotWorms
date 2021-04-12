@@ -43,6 +43,13 @@ public class MovesSystem : MonoBehaviour
 
     void Move()
     {
+        if (gameManager.BotManagers.Count == 0)
+        {
+            gameManager.GameOverManager.GameResult(false);
+            gameManager.GameOverManager.MenuState(true);
+            return;
+        }
+
         // Ход ботов
         if (!IsPlayerTurn)
         {
@@ -54,19 +61,23 @@ public class MovesSystem : MonoBehaviour
                 if (bot == null || bot.MoveWasMade) continue;
 
                 bot.MoveWasMade = true;
-                botFound = bot.TurnState(true);
 
-                // Если бот может ходить
-                if (botFound)
+                if (bot.TurnsSkip > 0)
                 {
-                    botManager = bot;
-                    hudManager.UpdateSideTurnText(true);
-                    hudManager.WeaponSlotButtonsState(false);
-                    cameraController.ChangeTarget(bot.transform);
+                    bot.FreezeState(-1);
+                    continue;
                 }
+
+                botManager = bot;
+                botFound = true;
+                bot.TurnState(true);
+                hudManager.UpdateSideTurnText(true);
+                hudManager.WeaponSlotButtonsState(false);
+                cameraController.ChangeTarget(bot.transform);
 
                 break;
             }
+
 
             // Если все боты сделали свой ход
             if (!botFound)
@@ -127,7 +138,9 @@ public class MovesSystem : MonoBehaviour
     public void RestartGame(float delay = 0)
     {
         isGameFinished = false;
+        IsPlayerTurn = true;
 
+        ClearBots();
         StartMove(delay);
     }
 
@@ -191,10 +204,11 @@ public class MovesSystem : MonoBehaviour
             yield return null;
         }
 
-        hudManager.UpdatePreparationText(0, false);
+        hudManager.UpdatePreparationText(0, true);
 
         yield return new WaitForSeconds(0.5f);
 
+        hudManager.UpdatePreparationText(moveTime, false);
         Move();
     }
 }

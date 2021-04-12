@@ -1,13 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
+using DG.Tweening;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class HUDManager : MonoBehaviour
 {
     [Header("Settings")]
     [SerializeField] float animationTime;
     [SerializeField] float scaleMultiplier;
+    [SerializeField] float hitFlashFadeTime;
     [SerializeField] Color defaultWeaponSlotColor;
     [SerializeField] Color playerTurnColor;
     [SerializeField] Color enemyTurnColor;
@@ -17,6 +18,7 @@ public class HUDManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI turnTMP;
     [SerializeField] TextMeshProUGUI timerTitleTMP;
     [SerializeField] TextMeshProUGUI timerTMP;
+    [SerializeField] Image hitFlash;
     [SerializeField] WeaponSlot[] weaponSlots;
 
     WeaponSlot currentWeapon;
@@ -65,5 +67,14 @@ public class HUDManager : MonoBehaviour
     {
         foreach (var slot in weaponSlots)
             slot.Button.interactable = activate;
+    }
+
+    // "Вспышка" при попадании
+    public void TriggerHitFlash()
+    {
+        hitFlash.DOFade(0.6f, hitFlashFadeTime).OnComplete(() =>
+        {
+            hitFlash.DOFade(0, hitFlashFadeTime);
+        });
     }
 }

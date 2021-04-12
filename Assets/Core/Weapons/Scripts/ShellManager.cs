@@ -8,6 +8,7 @@ public class ShellManager : MonoBehaviour
     [SerializeField] Rigidbody2D rbody;
     [SerializeField] CircleCollider2D triggerCollider;
     [SerializeField] ParticleSystem deathPSPrefab;
+    [SerializeField] ParticleSystem firePSPrefab;
 
     public Rigidbody2D RBody => rbody;
 
@@ -49,7 +50,7 @@ public class ShellManager : MonoBehaviour
         Destroy(deathPS.gameObject, 60);
 
         SoundManager.Instance.Play(SoundName.Hit, true);
-        CameraController.Instance.Shake(0);
+        CameraController.Instance.Shake();
     }
 
     // Ќачинаем наносить переодический урон
@@ -57,6 +58,10 @@ public class ShellManager : MonoBehaviour
     {
         damageCO = StartCoroutine(PeriodicDamage());
 
+        var firePS = Instantiate(firePSPrefab, botManager.transform);
+        firePS.transform.position = botManager.transform.position;
+
+        Destroy(firePS.gameObject, weaponMeta.FireDuration);
         StartCoroutine(PeriodicDamageTimer());
     }
 
@@ -65,7 +70,7 @@ public class ShellManager : MonoBehaviour
     {
         while (botManager != null)
         {
-            botManager.DoDamage(weaponMeta.PeriodicDamage);
+            botManager.DoDamage(weaponMeta.PeriodicDamage, false);
 
             yield return new WaitForSeconds(weaponMeta.DamageInterval);
         }
@@ -90,13 +95,13 @@ public class ShellManager : MonoBehaviour
 
             if (botManager != null)
             {
-                botManager.DoDamage(impactDamage, true);
+                botManager.DoDamage(impactDamage);
                 //Die();
 
                 // ≈сли оружие поджигающего типа, начинаем наносить переодический урон
                 if (weaponMeta.WeaponType == WeaponType.Fiery) StartPeriodicDamage();
                 // ≈сли оружие замораживающего типа, останавливаем ход врагу на n раундов
-                else if (weaponMeta.WeaponType == WeaponType.Frozen) botManager.TurnsSkip += weaponMeta.SkipTurnsCount;
+                else if (weaponMeta.WeaponType == WeaponType.Frozen) botManager.FreezeState(weaponMeta.SkipTurnsCount);
             }
         }
         else
